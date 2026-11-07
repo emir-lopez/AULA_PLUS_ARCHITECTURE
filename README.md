@@ -7,13 +7,13 @@ Domain Events, API REST (FastAPI + OpenAPI), PostgreSQL, pruebas ≥ 80 %, Docke
 - **Caso:** 08 — AulaPlus · FIME, UANL · Prof. Miguel Ángel Gómez Marroquín
 - **Equipo 8:** Andrés Caleb Leija Pedroza (2144830) · David Alonso Torres Guerrero (2144813) · Emir Misael López Pérez (2150561)
 - **Repositorio:** https://github.com/emir-lopez/AULA_PLUS_ARCHITECTURE
-- **Sistema desplegado (Swagger):** `https://<servicio>.onrender.com/docs` ← *anotar la URL después de desplegar*
+- **Sistema desplegado (Swagger):** https://aula-plus-architecture.onrender.com/docs (Render, plan gratis: la primera petición puede tardar ~50 s en despertar)
 
 | Indicador | Resultado |
 |---|---|
-| Pruebas | 199 (unitarias + integración + PostgreSQL real) — todas en verde |
-| Cobertura | 98.6 % líneas y ramas (mínimo exigido 80 %) |
-| Historias de usuario | 19 con Gherkin (16 implementadas y probadas, 3 en backlog documentado) |
+| Pruebas | 212 (unitarias + integración + PostgreSQL real) — todas en verde |
+| Cobertura | 98.7 % líneas y ramas (mínimo exigido 80 %) |
+| Historias de usuario | 19 con Gherkin (18 implementadas y probadas, 1 en backlog documentado) |
 | Paquete del PIA | 120 casos + 20 transiciones ejecutados por el dominio ([evidencia](docs/evidencias/)) |
 
 ---
@@ -56,7 +56,7 @@ uvicorn api.main:app --app-dir src --reload
 ## 3. Pruebas y calidad
 
 ```bash
-pytest                                              # 196 pruebas (las 3 de PostgreSQL se omiten sin BD)
+pytest                                              # 209 pruebas (las 3 de PostgreSQL se omiten sin BD)
 pytest --cov --cov-report=term-missing --cov-fail-under=80
 ruff check src tests scripts
 TEST_DATABASE_URL=postgresql+psycopg://aulaplus:aulaplus_local@localhost:5432/aulaplus_test pytest   # con el db de compose
@@ -70,6 +70,7 @@ python scripts/exportar_openapi.py                  # regenera docs/api/openapi.
 | `tests/integration/test_servicios_sql.py` | Casos de uso con SQLAlchemy: atomicidad, rollback, outbox, conflicto de versión, cupo de sede, flujo completo y KPIs |
 | `tests/integration/test_api.py` | Contrato HTTP: 200/201, 400, 404, 409, 422, Swagger y cabecera `X-Fecha-Simulada` |
 | `tests/integration/test_paquete_pia.py` | Los CSV del docente: claves foráneas, totales con `Decimal`, 120 casos y 20 transiciones |
+| `tests/integration/test_us12_us13.py` | Extensión de sesión (US-12), falla de conexión (US-13) y migración de columnas |
 | `tests/integration/test_postgres.py` | PostgreSQL real: zona horaria, 5 reservas concurrentes del mismo bloque, último cupo de sede entre tres tutores |
 
 ## 4. CI/CD
@@ -82,11 +83,19 @@ python scripts/exportar_openapi.py                  # regenera docs/api/openapi.
 
 ## 5. Despliegue en Render
 
-1. En Render: **New → Blueprint** → seleccionar este repositorio. `render.yaml` crea `aulaplus-db` (PostgreSQL) y
-   `aulaplus-api` (Docker, healthcheck `/health`).
-2. Esperar al primer deploy y abrir `https://aulaplus-api-xxxx.onrender.com/docs`.
-3. (Opcional) Copiar el *Deploy Hook* del servicio a GitHub → Settings → Secrets → `RENDER_DEPLOY_HOOK_URL`.
-4. Anotar la URL arriba en este README.
+**Despliegue actual:** https://aula-plus-architecture.onrender.com/docs — rama `pia-final`, plan gratis.
+
+Cómo se hizo (sin permisos de administrador sobre el repo):
+
+1. **New → Postgres** (plan Free) y copiar su *Internal Database URL*.
+2. **New → Web Service → Public Git Repository** con la URL de este repo, rama `pia-final`, runtime **Docker**,
+   *Health Check Path* `/health`.
+3. Variables: `DATABASE_URL` (la URL interna), `APP_ENV=production`, `SEED_DEMO=true`, `PERMITIR_FECHA_SIMULADA=true`.
+4. Para publicar cambios: **Manual Deploy → Deploy latest commit**.
+
+Alternativa con permisos de administrador: **New → Blueprint** usando `render.yaml` (crea la base y el servicio) y
+guardar el *Deploy Hook* en GitHub → Settings → Secrets → `RENDER_DEPLOY_HOOK_URL` para que el job `deploy` del CI
+despliegue solo en cada push a `main`.
 
 La URL `postgres://` de Render se normaliza automáticamente; el puerto se toma de `$PORT` (12-Factor).
 

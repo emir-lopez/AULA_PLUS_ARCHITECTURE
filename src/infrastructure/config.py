@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     horas_anticipacion_minima: int = 2
     dias_vigencia_agenda: int = 7
     marcas_para_suspension: int = 3
+    minutos_tolerancia_conexion: int = 15
+    minutos_maximos_extension: int = 60
 
     def parametros(self) -> ParametrosOperacion:
         return ParametrosOperacion(
@@ -34,6 +36,8 @@ class Settings(BaseSettings):
             minutos_tolerancia_no_show=self.minutos_tolerancia_no_show,
             horas_anticipacion_minima=self.horas_anticipacion_minima,
             dias_vigencia_agenda=self.dias_vigencia_agenda,
+            minutos_tolerancia_conexion=self.minutos_tolerancia_conexion,
+            minutos_maximos_extension=self.minutos_maximos_extension,
         )
 
     def politica_suspension(self) -> PoliticaSuspension:

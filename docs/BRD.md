@@ -58,9 +58,11 @@ cancelación por estudiante con reembolso escalonado · cancelación del tutor c
 y revisión por Soporte · No-Show · comisión 20 % y neto · retención de 48 h y liberación · disputas con mediación de
 72 h · marcas de incumplimiento y suspensión · calificación · KPIs.
 
-**Incluye pero no implementado en esta versión (backlog):** reasignación automática de tutor (US-10), extensión de
-sesión (US-12) y gestión de fallas de conexión con pausa de 15 min (US-13). Se conservan como requisitos; ver
-[trazabilidad](architecture/trazabilidad.md).
+**También implementado:** extensión de sesión pagada en la plataforma (US-12) y gestión de fallas de conexión con
+tolerancia de 15 min (US-13).
+
+**Incluye pero no implementado en esta versión (backlog):** reasignación automática de tutor (US-10). Se conserva como
+requisito; mientras tanto aplica la compensación del 100 % (R-13). Ver [trazabilidad](architecture/trazabilidad.md).
 
 **No incluye:** nuevos métodos de pago, expansión internacional/otras monedas, mensajería, videoconferencia propia,
 programas de lealtad, gestión académica de contenidos, contratación de tutores.
@@ -108,8 +110,10 @@ programas de lealtad, gestión académica de contenidos, contratación de tutore
 | R-14 | Marcas de incumplimiento; suspensión al alcanzar el umbral | 3 marcas (parámetro) | US-09, H-07 | Supuesto configurable |
 | R-15 | La disputa solo se abre dentro de la ventana de retención y con pago aún no liberado | 48 h | Glosario "Ventana de disputas" | Validada |
 | R-16 | Una cancelación del tutor con ≤24 h de anticipación es tardía y genera marca | 24 h | Glosario "Penalizaciones" | Supuesto (S-09) |
+| R-17 | Extensión de sesión en bloques de 15 min, máximo 60 min, pagada en la plataforma | 15 / 60 min | US-12, restr. 1 | Validada (bloques: supuesto) |
+| R-18 | Tolerancia ante falla de conexión; si se excede, la sesión pasa a revisión de Soporte | 15 min | Restr. 8, US-13 | Validada |
 
-Restricciones adicionales: tolerancia de falla de conexión de 15 min (backlog US-13); montos en MXN con dos decimales.
+Montos en MXN con dos decimales.
 Todos los plazos son variables de entorno (`.env.example`) para cambiarlos sin tocar código (12-Factor).
 
 ## 8. Supuestos

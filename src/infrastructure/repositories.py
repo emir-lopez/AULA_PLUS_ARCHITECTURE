@@ -156,7 +156,8 @@ class RepositorioSqlTransaccionSesion:
             disputa=disputa,
             calificacion=(Calificacion(f.calificacion_puntos, f.calificacion_comentario or "")
                           if f.calificacion_puntos else None),
-            liberado_en=a_utc(f.liberado_en), version=f.version,
+            liberado_en=a_utc(f.liberado_en), minutos_extension=f.minutos_extension or 0,
+            falla_conexion_desde=a_utc(f.falla_conexion_desde), version=f.version,
         )
         self.rastreador.recordar(sesion)
         return sesion
@@ -212,4 +213,6 @@ class RepositorioSqlTransaccionSesion:
             "calificacion_puntos": s.calificacion.puntos if s.calificacion else None,
             "calificacion_comentario": s.calificacion.comentario if s.calificacion else None,
             "liberado_en": a_utc(s.liberado_en),
+            "minutos_extension": s.minutos_extension,
+            "falla_conexion_desde": a_utc(s.falla_conexion_desde),
         }

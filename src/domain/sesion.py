@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 from . import events as ev
 from .events import EventoDominio
@@ -62,6 +63,8 @@ class TransaccionSesion:
     disputa: Disputa | None = None
     calificacion: Calificacion | None = None
     liberado_en: datetime | None = None
+    minutos_extension: int = 0
+    falla_conexion_desde: datetime | None = None
     version: int = 0
     eventos: list[EventoDominio] = field(default_factory=list)
 
@@ -195,6 +198,63 @@ class TransaccionSesion:
         self._registrar(ev.NO_SHOW_REGISTRADO, ahora, parte_ausente=parte_ausente.value,
                         reembolso=str(reembolso.monto))
         return reembolso
+
+    def _exigir_en_curso(self, ahora: datetime) -> None:
+        if self.estado != EstadoSesion.CONFIRMADA:
+            raise ReglaDeNegocioViolada("SesionNoEnCurso", f"La sesión está en estado {self.estado.value}")
+        if not self.ventana.inicio <= ahora < self.ventana.fin:
+            raise ReglaDeNegocioViolada("SesionNoEnCurso", "La operación solo aplica durante la sesión")
+
+    def extender(self, estudiante_id: str, minutos: int, tarifa_hora: Dinero, monto_pagado: Dinero,
+                 ahora: datetime, max_minutos: int = 60) -> Dinero:
+        """US-12 / NB-08 / R-12: extensión pagada dentro de la plataforma, en bloques de 15 min."""
+        exigir_zona_horaria(ahora)
+        if estudiante_id != self.estudiante_id:
+            raise ReglaDeNegocioViolada("SolicitanteNoEsElEstudiante")
+        self._exigir_en_curso(ahora)
+        if minutos <= 0 or minutos % 15 != 0:
+            raise DatoInvalido("ExtensionInvalida", "La extensión se solicita en bloques de 15 minutos")
+        if self.minutos_extension + minutos > max_minutos:
+            raise ReglaDeNegocioViolada("ExtensionExcedeMaximo", f"Máximo {max_minutos} minutos de extensión")
+        costo = tarifa_hora.por_porcentaje(Decimal(minutos) / Decimal(60))
+        if monto_pagado != costo:
+            raise ReglaDeNegocioViolada("MontoDeExtensionIncorrecto",
+                                        f"La extensión cuesta {costo}; se recibió {monto_pagado}")
+        self.ventana = VentanaHoraria(self.ventana.inicio, self.ventana.fin + timedelta(minutes=minutos))
+        self.monto = self.monto.sumar(costo)
+        self.minutos_extension += minutos
+        self._registrar(ev.SESION_EXTENDIDA, ahora, minutos=minutos, costo=str(costo.monto),
+                        nuevo_fin=self.ventana.fin.isoformat())
+        return costo
+
+    def reportar_falla_conexion(self, solicitante_id: str, ahora: datetime) -> None:
+        """US-13 / NB-09: una parte reporta caída de conexión en sesión en línea; se notifica a Soporte."""
+        exigir_zona_horaria(ahora)
+        if solicitante_id not in (self.estudiante_id, self.tutor_id):
+            raise ReglaDeNegocioViolada("SolicitanteNoEsParteDeLaSesion")
+        if self.modalidad != Modalidad.EN_LINEA:
+            raise ReglaDeNegocioViolada("SoloSesionesEnLinea", "La falla de conexión aplica a sesiones en línea")
+        self._exigir_en_curso(ahora)
+        if self.falla_conexion_desde is not None:
+            raise ReglaDeNegocioViolada("FallaYaReportada")
+        self.falla_conexion_desde = ahora
+        self._registrar(ev.FALLA_CONEXION_REPORTADA, ahora, reportada_por=solicitante_id)
+
+    def registrar_reconexion(self, ahora: datetime, params: ParametrosOperacion) -> EstadoSesion:
+        """Dentro de la tolerancia (15 min) la sesión continúa; fuera de ella pasa a revisión de Soporte."""
+        exigir_zona_horaria(ahora)
+        if self.falla_conexion_desde is None:
+            raise ReglaDeNegocioViolada("SinFallaReportada")
+        transicionar(self.estado, AccionSesion.ENVIAR_A_REVISION)  # solo válido mientras está Confirmada
+        caida = ahora - self.falla_conexion_desde
+        self.falla_conexion_desde = None
+        if caida <= timedelta(minutes=params.minutos_tolerancia_conexion):
+            self._registrar(ev.CONEXION_RESTABLECIDA, ahora, minutos_caida=int(caida.total_seconds() // 60))
+        else:
+            self.estado = transicionar(self.estado, AccionSesion.ENVIAR_A_REVISION)
+            self.motivo_revision = "FallaDeConexion"
+            self._registrar(ev.SESION_ENVIADA_A_REVISION, ahora, motivo=self.motivo_revision)
+        return self.estado
 
     def calificar(self, estudiante_id: str, calificacion: Calificacion, ahora: datetime) -> None:
         """US-18."""

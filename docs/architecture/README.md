@@ -67,11 +67,11 @@ infrastructure (SQLAlchemy, UoW, outbox, config) ──implementa──┘
 - **Concurrencia:** optimista por `version` (agenda y sesión) + pesimista por sede (`FOR UPDATE`).
 - **Configuración 12-Factor:** `infrastructure/config.py` lee variables de entorno; `.env.example` sin secretos.
 - **Demo de plazos:** cabecera `X-Fecha-Simulada`, solo si `PERMITIR_FECHA_SIMULADA=true` (desactivar en producción real).
-- **Esquema de base:** `create_all` al iniciar (suficiente para el PIA). Evolución futura: Alembic.
+- **Esquema de base:** `create_all` al iniciar más una migración mínima idempotente que agrega columnas nuevas a tablas existentes (`_agregar_columnas_faltantes`). Evolución futura: Alembic.
 
 ## 5. Riesgos y límites conocidos
 
-- US-10, US-12 y US-13 están en backlog (ver trazabilidad).
+- US-10 (reasignación automática de tutor) está en backlog (ver trazabilidad).
 - El outbox se llena pero no hay *relay* a un broker de mensajería.
 - Sin autenticación: los IDs de estudiante/tutor llegan en el cuerpo. En producción se tomarían del token (RBAC de U5).
 - SQLite no soporta `FOR UPDATE`: las pruebas de concurrencia corren solo contra PostgreSQL (Docker y CI).

@@ -20,6 +20,7 @@ from .schemas import (
     DisputaIn,
     ErrorOut,
     EvidenciaIn,
+    ExtensionIn,
     NoShowIn,
     PagoIn,
     ReservaIn,
@@ -134,6 +135,30 @@ def completar(sesion_id: str, body: EvidenciaIn, request: Request) -> dict:
 def no_show(sesion_id: str, body: NoShowIn, request: Request) -> dict:
     c = _c(request)
     c.ejecucion.registrar_no_show(sesion_id, body.parte_ausente)
+    return _detalle(c, sesion_id)
+
+
+@router.post("/sesiones/{sesion_id}/extension", tags=["ejecución"],
+             summary="US-12 Extender sesión en curso (bloques de 15 min, cobro en plataforma)")
+def extender(sesion_id: str, body: ExtensionIn, request: Request) -> dict:
+    c = _c(request)
+    c.ejecucion.extender_sesion(sesion_id, body.estudiante_id, body.minutos, Dinero(body.monto))
+    return _detalle(c, sesion_id)
+
+
+@router.post("/sesiones/{sesion_id}/falla-conexion", tags=["ejecución"],
+             summary="US-13 Reportar falla de conexión (sesión en línea en curso)")
+def falla_conexion(sesion_id: str, body: SolicitanteIn, request: Request) -> dict:
+    c = _c(request)
+    c.ejecucion.reportar_falla_conexion(sesion_id, body.solicitante_id)
+    return _detalle(c, sesion_id)
+
+
+@router.post("/sesiones/{sesion_id}/reconexion", tags=["ejecución"],
+             summary="US-13 Registrar reconexión: ≤15 min continúa; >15 min pasa a revisión de Soporte")
+def reconexion(sesion_id: str, request: Request) -> dict:
+    c = _c(request)
+    c.ejecucion.registrar_reconexion(sesion_id)
     return _detalle(c, sesion_id)
 
 

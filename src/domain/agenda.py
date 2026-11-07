@@ -80,6 +80,14 @@ class AgendaTutor:
         self.eventos.append(EventoDominio(ev.HORARIO_LIBERADO, self.tutor_id, ahora,
                                           {"bloque_id": bloque_id, "sesion_id": sesion_id}))
 
+    def extender_bloque(self, bloque_id: str, sesion_id: str, nueva_ventana: VentanaHoraria) -> None:
+        """US-12: la extensión no puede empalmarse con otro bloque del tutor (INV-AT-01)."""
+        bloque = self.bloque(bloque_id)
+        self._exigir_duenia(bloque, sesion_id)
+        if any(b.bloque_id != bloque_id and b.ventana.se_empalma(nueva_ventana) for b in self.bloques.values()):
+            raise ConflictoDeRecurso("ExtensionEmpalmada", "El tutor tiene otro horario inmediatamente después")
+        bloque.ventana = nueva_ventana
+
     @staticmethod
     def _exigir_duenia(bloque: BloqueDeAgenda, sesion_id: str) -> None:
         # INV-AT-05: solo la sesión que congeló el bloque puede bloquearlo o liberarlo.

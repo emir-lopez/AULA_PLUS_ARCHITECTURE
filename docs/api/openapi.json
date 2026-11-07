@@ -914,6 +914,248 @@
         }
       }
     },
+    "/sesiones/{sesion_id}/extension": {
+      "post": {
+        "tags": [
+          "ejecución"
+        ],
+        "summary": "US-12 Extender sesión en curso (bloques de 15 min, cobro en plataforma)",
+        "operationId": "extender_sesiones__sesion_id__extension_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtensionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Extender Sesiones  Sesion Id  Extension Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/falla-conexion": {
+      "post": {
+        "tags": [
+          "ejecución"
+        ],
+        "summary": "US-13 Reportar falla de conexión (sesión en línea en curso)",
+        "operationId": "falla_conexion_sesiones__sesion_id__falla_conexion_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitanteIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Falla Conexion Sesiones  Sesion Id  Falla Conexion Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/reconexion": {
+      "post": {
+        "tags": [
+          "ejecución"
+        ],
+        "summary": "US-13 Registrar reconexión: ≤15 min continúa; >15 min pasa a revisión de Soporte",
+        "operationId": "reconexion_sesiones__sesion_id__reconexion_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Reconexion Sesiones  Sesion Id  Reconexion Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/sesiones/{sesion_id}/calificacion": {
       "post": {
         "tags": [
@@ -1734,6 +1976,46 @@
         },
         "type": "object",
         "title": "EvidenciaIn"
+      },
+      "ExtensionIn": {
+        "properties": {
+          "estudiante_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Estudiante Id"
+          },
+          "minutos": {
+            "type": "integer",
+            "title": "Minutos",
+            "description": "Bloques de 15 minutos (máximo 60 en total)",
+            "examples": [
+              30
+            ]
+          },
+          "monto": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Monto",
+            "description": "Pago de la extensión: tarifa por hora × minutos / 60",
+            "examples": [
+              "175.00"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "estudiante_id",
+          "minutos",
+          "monto"
+        ],
+        "title": "ExtensionIn"
       },
       "Modalidad": {
         "type": "string",

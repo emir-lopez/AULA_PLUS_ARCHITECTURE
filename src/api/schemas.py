@@ -63,6 +63,12 @@ class NoShowIn(BaseModel):
     parte_ausente: ParteSesion
 
 
+class ExtensionIn(BaseModel):
+    estudiante_id: str = Field(min_length=1, max_length=40)
+    minutos: int = Field(examples=[30], description="Bloques de 15 minutos (máximo 60 en total)")
+    monto: Decimal = Field(examples=["175.00"], description="Pago de la extensión: tarifa por hora × minutos / 60")
+
+
 class CalificacionIn(BaseModel):
     estudiante_id: str
     puntos: int = Field(ge=1, le=5)
