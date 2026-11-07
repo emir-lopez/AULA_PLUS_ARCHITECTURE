@@ -1,0 +1,21 @@
+﻿recurso_id,descripcion,precio_mxn,capacidad_o_stock,habilitado
+AUL-P001,Python 01,405.00,13,1
+AUL-P002,Redes 02,476.00,16,1
+AUL-P003,Bases de datos 03,547.00,19,1
+AUL-P004,Seguridad 04,618.00,22,1
+AUL-P005,Python 05,689.00,25,1
+AUL-P006,Redes 06,760.00,28,1
+AUL-P007,Bases de datos 07,831.00,31,1
+AUL-P008,Seguridad 08,902.00,34,1
+AUL-P009,Python 09,973.00,37,1
+AUL-P010,Redes 10,1044.00,40,1
+AUL-P011,Bases de datos 11,1115.00,43,0
+AUL-P012,Seguridad 12,1186.00,46,1
+AUL-P013,Python 13,1257.00,49,1
+AUL-P014,Redes 14,1328.00,52,1
+AUL-P015,Bases de datos 15,1399.00,10,1
+AUL-P016,Seguridad 16,1470.00,13,1
+AUL-P017,Python 17,1541.00,16,1
+AUL-P018,Redes 18,1612.00,19,1
+AUL-P019,Bases de datos 19,1683.00,22,1
+AUL-P020,Seguridad 20,1754.00,25,1

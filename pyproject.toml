@@ -1,0 +1,29 @@
+[project]
+name = "aulaplus"
+version = "1.0.0"
+description = "AulaPlus - PIA Componentes de Lógica de Negocio (Equipo 8, FIME UANL)"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["postgres: pruebas que requieren PostgreSQL real (docker compose)"]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["src/infrastructure/seed.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B008"]

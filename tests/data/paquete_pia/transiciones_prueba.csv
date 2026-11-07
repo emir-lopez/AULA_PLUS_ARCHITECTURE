@@ -1,0 +1,21 @@
+﻿caso_id,operacion_id,accion_sugerida,estado_inicial,resultado_alumno,instrucciones
+AUL-S001,AUL-O001,completar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S002,AUL-O002,cancelar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S003,AUL-O003,repetir_aprobacion,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S004,AUL-O004,saltar_estado,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S005,AUL-O005,aprobar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S006,AUL-O006,completar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S007,AUL-O007,cancelar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S008,AUL-O008,repetir_aprobacion,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S009,AUL-O009,saltar_estado,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S010,AUL-O010,aprobar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S011,AUL-O011,completar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S012,AUL-O012,cancelar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S013,AUL-O013,repetir_aprobacion,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S014,AUL-O014,saltar_estado,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S015,AUL-O015,aprobar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S016,AUL-O016,completar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S017,AUL-O017,cancelar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S018,AUL-O018,repetir_aprobacion,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S019,AUL-O019,saltar_estado,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+AUL-S020,AUL-O020,aprobar,PREINSCRITA,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion

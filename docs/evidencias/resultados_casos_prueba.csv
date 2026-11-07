@@ -1,0 +1,121 @@
+﻿caso_id,operacion_id,resultado_alumno,evidencia
+AUL-T001,AUL-O001,APROBADA,total=8231.00; motivo=-
+AUL-B001,AUL-O001,NO_APLICA,preferente=False; total=8231.00; promo=False
+AUL-T002,AUL-O002,APROBADA,total=7237.00; motivo=-
+AUL-B002,AUL-O002,NO_APLICA,preferente=False; total=7237.00; promo=False
+AUL-T003,AUL-O003,APROBADA,total=1399.00; motivo=-
+AUL-B003,AUL-O003,NO_APLICA,preferente=True; total=1399.00; promo=False
+AUL-T004,AUL-O004,APROBADA,total=4865.00; motivo=-
+AUL-B004,AUL-O004,NO_APLICA,preferente=False; total=4865.00; promo=False
+AUL-T005,AUL-O005,APROBADA,total=5370.00; motivo=-
+AUL-B005,AUL-O005,NO_APLICA,preferente=False; total=5370.00; promo=False
+AUL-T006,AUL-O006,APROBADA,total=2472.00; motivo=-
+AUL-B006,AUL-O006,NO_APLICA,preferente=False; total=2472.00; promo=False
+AUL-T007,AUL-O007,APROBADA,total=3203.00; motivo=-
+AUL-B007,AUL-O007,NO_APLICA,preferente=False; total=3203.00; promo=False
+AUL-T008,AUL-O008,RECHAZADA,total=13301.00; motivo=PagoNoAutorizado
+AUL-B008,AUL-O008,APLICA,preferente=True; total=13301.00; promo=False
+AUL-T009,AUL-O009,APROBADA,total=3771.00; motivo=-
+AUL-B009,AUL-O009,NO_APLICA,preferente=False; total=3771.00; promo=True
+AUL-T010,AUL-O010,APROBADA,total=6285.00; motivo=-
+AUL-B010,AUL-O010,NO_APLICA,preferente=False; total=6285.00; promo=False
+AUL-T011,AUL-O011,APROBADA,total=5838.00; motivo=-
+AUL-B011,AUL-O011,NO_APLICA,preferente=False; total=5838.00; promo=False
+AUL-T012,AUL-O012,APROBADA,total=952.00; motivo=-
+AUL-B012,AUL-O012,NO_APLICA,preferente=False; total=952.00; promo=False
+AUL-T013,AUL-O013,RECHAZADA,total=0.00; motivo=OperacionSinLineas
+AUL-B013,AUL-O013,NO_APLICA,preferente=True; total=0.00; promo=False
+AUL-T014,AUL-O014,APROBADA,total=8089.00; motivo=-
+AUL-B014,AUL-O014,NO_APLICA,preferente=False; total=8089.00; promo=False
+AUL-T015,AUL-O015,APROBADA,total=1115.00; motivo=-
+AUL-B015,AUL-O015,NO_APLICA,preferente=False; total=1115.00; promo=False
+AUL-T016,AUL-O016,RECHAZADA,total=7705.00; motivo=PagoNoAutorizado
+AUL-B016,AUL-O016,NO_APLICA,preferente=False; total=7705.00; promo=False
+AUL-T017,AUL-O017,APROBADA,total=7358.00; motivo=-
+AUL-B017,AUL-O017,NO_APLICA,preferente=False; total=7358.00; promo=False
+AUL-T018,AUL-O018,APROBADA,total=7016.00; motivo=-
+AUL-B018,AUL-O018,NO_APLICA,preferente=True; total=7016.00; promo=True
+AUL-T019,AUL-O019,APROBADA,total=2351.00; motivo=-
+AUL-B019,AUL-O019,NO_APLICA,preferente=False; total=2351.00; promo=False
+AUL-T020,AUL-O020,APROBADA,total=10745.00; motivo=-
+AUL-B020,AUL-O020,NO_APLICA,preferente=False; total=10745.00; promo=False
+AUL-T021,AUL-O021,APROBADA,total=2919.00; motivo=-
+AUL-B021,AUL-O021,NO_APLICA,preferente=False; total=2919.00; promo=False
+AUL-T022,AUL-O022,APROBADA,total=6285.00; motivo=-
+AUL-B022,AUL-O022,NO_APLICA,preferente=False; total=6285.00; promo=False
+AUL-T023,AUL-O023,APROBADA,total=6974.00; motivo=-
+AUL-B023,AUL-O023,APLICA,preferente=True; total=6974.00; promo=False
+AUL-T024,AUL-O024,RECHAZADA,total=3224.00; motivo=PagoNoAutorizado
+AUL-B024,AUL-O024,NO_APLICA,preferente=False; total=3224.00; promo=False
+AUL-T025,AUL-O025,APROBADA,total=4255.00; motivo=-
+AUL-B025,AUL-O025,NO_APLICA,preferente=False; total=4255.00; promo=False
+AUL-T026,AUL-O026,APROBADA,total=6101.00; motivo=-
+AUL-B026,AUL-O026,NO_APLICA,preferente=False; total=6101.00; promo=False
+AUL-T027,AUL-O027,APROBADA,total=831.00; motivo=-
+AUL-B027,AUL-O027,NO_APLICA,preferente=False; total=831.00; promo=True
+AUL-T028,AUL-O028,APROBADA,total=6285.00; motivo=-
+AUL-B028,AUL-O028,APLICA,preferente=True; total=6285.00; promo=False
+AUL-T029,AUL-O029,APROBADA,total=10766.00; motivo=-
+AUL-B029,AUL-O029,NO_APLICA,preferente=False; total=10766.00; promo=False
+AUL-T030,AUL-O030,APROBADA,total=5880.00; motivo=-
+AUL-B030,AUL-O030,NO_APLICA,preferente=False; total=5880.00; promo=False
+AUL-T031,AUL-O031,APROBADA,total=2919.00; motivo=-
+AUL-B031,AUL-O031,NO_APLICA,preferente=False; total=2919.00; promo=False
+AUL-T032,AUL-O032,RECHAZADA,total=8189.00; motivo=PagoNoAutorizado
+AUL-B032,AUL-O032,NO_APLICA,preferente=False; total=8189.00; promo=False
+AUL-T033,AUL-O033,APROBADA,total=2067.00; motivo=-
+AUL-B033,AUL-O033,APLICA,preferente=True; total=2067.00; promo=False
+AUL-T034,AUL-O034,RECHAZADA,total=4865.00; motivo=EstudianteInactivo
+AUL-B034,AUL-O034,NO_APLICA,preferente=False; total=4865.00; promo=False
+AUL-T035,AUL-O035,RECHAZADA,total=5270.00; motivo=EstudianteInactivo
+AUL-B035,AUL-O035,NO_APLICA,preferente=False; total=5270.00; promo=False
+AUL-T036,AUL-O036,RECHAZADA,total=2656.00; motivo=EstudianteInactivo
+AUL-B036,AUL-O036,NO_APLICA,preferente=False; total=2656.00; promo=True
+AUL-T037,AUL-O037,RECHAZADA,total=6527.00; motivo=EstudianteInactivo
+AUL-B037,AUL-O037,NO_APLICA,preferente=False; total=6527.00; promo=False
+AUL-T038,AUL-O038,RECHAZADA,total=9793.00; motivo=EstudianteInactivo
+AUL-B038,AUL-O038,APLICA,preferente=True; total=9793.00; promo=False
+AUL-T039,AUL-O039,RECHAZADA,total=0.00; motivo=OperacionSinLineas
+AUL-B039,AUL-O039,NO_APLICA,preferente=False; total=0.00; promo=False
+AUL-T040,AUL-O040,RECHAZADA,total=4865.00; motivo=PagoNoAutorizado
+AUL-B040,AUL-O040,NO_APLICA,preferente=False; total=4865.00; promo=False
+AUL-T041,AUL-O041,APROBADA,total=9914.00; motivo=-
+AUL-B041,AUL-O041,NO_APLICA,preferente=False; total=9914.00; promo=False
+AUL-T042,AUL-O042,APROBADA,total=4744.00; motivo=-
+AUL-B042,AUL-O042,NO_APLICA,preferente=False; total=4744.00; promo=False
+AUL-T043,AUL-O043,APROBADA,total=4907.00; motivo=-
+AUL-B043,AUL-O043,APLICA,preferente=True; total=4907.00; promo=False
+AUL-T044,AUL-O044,APROBADA,total=8473.00; motivo=-
+AUL-B044,AUL-O044,NO_APLICA,preferente=False; total=8473.00; promo=False
+AUL-T045,AUL-O045,APROBADA,total=1215.00; motivo=-
+AUL-B045,AUL-O045,NO_APLICA,preferente=False; total=1215.00; promo=True
+AUL-T046,AUL-O046,APROBADA,total=3445.00; motivo=-
+AUL-B046,AUL-O046,NO_APLICA,preferente=False; total=3445.00; promo=False
+AUL-T047,AUL-O047,APROBADA,total=7826.00; motivo=-
+AUL-B047,AUL-O047,NO_APLICA,preferente=False; total=7826.00; promo=False
+AUL-T048,AUL-O048,RECHAZADA,total=2088.00; motivo=PagoNoAutorizado
+AUL-B048,AUL-O048,APLICA,preferente=True; total=2088.00; promo=False
+AUL-T049,AUL-O049,APROBADA,total=10219.00; motivo=-
+AUL-B049,AUL-O049,NO_APLICA,preferente=False; total=10219.00; promo=False
+AUL-T050,AUL-O050,APROBADA,total=7805.00; motivo=-
+AUL-B050,AUL-O050,NO_APLICA,preferente=False; total=7805.00; promo=False
+AUL-T051,AUL-O051,APROBADA,total=1683.00; motivo=-
+AUL-B051,AUL-O051,NO_APLICA,preferente=False; total=1683.00; promo=False
+AUL-T052,AUL-O052,APROBADA,total=3445.00; motivo=-
+AUL-B052,AUL-O052,NO_APLICA,preferente=False; total=3445.00; promo=False
+AUL-T053,AUL-O053,APROBADA,total=7642.00; motivo=-
+AUL-B053,AUL-O053,APLICA,preferente=True; total=7642.00; promo=False
+AUL-T054,AUL-O054,APROBADA,total=3608.00; motivo=-
+AUL-B054,AUL-O054,NO_APLICA,preferente=False; total=3608.00; promo=True
+AUL-T055,AUL-O055,APROBADA,total=4055.00; motivo=-
+AUL-B055,AUL-O055,NO_APLICA,preferente=False; total=4055.00; promo=False
+AUL-T056,AUL-O056,RECHAZADA,total=10177.00; motivo=PagoNoAutorizado
+AUL-B056,AUL-O056,NO_APLICA,preferente=False; total=10177.00; promo=False
+AUL-T057,AUL-O057,APROBADA,total=4623.00; motivo=-
+AUL-B057,AUL-O057,NO_APLICA,preferente=False; total=4623.00; promo=False
+AUL-T058,AUL-O058,APROBADA,total=7705.00; motivo=-
+AUL-B058,AUL-O058,APLICA,preferente=True; total=7705.00; promo=False
+AUL-T059,AUL-O059,APROBADA,total=6122.00; motivo=-
+AUL-B059,AUL-O059,NO_APLICA,preferente=False; total=6122.00; promo=False
+AUL-T060,AUL-O060,APROBADA,total=1520.00; motivo=-
+AUL-B060,AUL-O060,NO_APLICA,preferente=False; total=1520.00; promo=False

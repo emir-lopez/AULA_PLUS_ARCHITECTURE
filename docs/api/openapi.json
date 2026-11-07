@@ -1,0 +1,1974 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AulaPlus API",
+    "description": "\nAPI de **AulaPlus** (Caso 08, Equipo 8 — Componentes de Lógica de Negocio, FIME UANL).\n\nProceso principal: **reservar → pagar → impartir → completar → (disputa) → liberar pago al tutor**.\n\n* Errores de dominio: `400` dato inválido · `404` no encontrado · `409` transición inválida o conflicto ·\n  `422` regla de negocio violada. Cuerpo: `{\"codigo\": \"...\", \"mensaje\": \"...\"}`.\n* Demo: si `PERMITIR_FECHA_SIMULADA=true`, la cabecera `X-Fecha-Simulada` (ISO-8601 con zona)\n  fija la hora de la petición para demostrar plazos de 10 min, 48 h y 72 h.\n",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "operación"
+        ],
+        "summary": "Liveness/readiness: verifica la conexión a la DB",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tutores": {
+      "post": {
+        "tags": [
+          "agenda"
+        ],
+        "summary": "Registrar tutor y su agenda (NB-02)",
+        "operationId": "registrar_tutor_tutores_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TutorIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Registrar Tutor Tutores Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tutores/{tutor_id}/bloques": {
+      "post": {
+        "tags": [
+          "agenda"
+        ],
+        "summary": "Publicar un bloque de disponibilidad",
+        "operationId": "agregar_bloque_tutores__tutor_id__bloques_post",
+        "parameters": [
+          {
+            "name": "tutor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Tutor Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BloqueIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Agregar Bloque Tutores  Tutor Id  Bloques Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sedes": {
+      "post": {
+        "tags": [
+          "agenda"
+        ],
+        "summary": "Registrar sede presencial",
+        "operationId": "registrar_sede_sedes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SedeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Registrar Sede Sedes Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tutores/disponibles": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Buscar tutores disponibles (US-11)",
+        "operationId": "tutores_disponibles_tutores_disponibles_get",
+        "parameters": [
+          {
+            "name": "inicio",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Inicio"
+            }
+          },
+          {
+            "name": "fin",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Tutores Disponibles Tutores Disponibles Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones": {
+      "post": {
+        "tags": [
+          "reserva y pago"
+        ],
+        "summary": "CU-01 Reservar sesión (congela el horario 10 min)",
+        "operationId": "reservar_sesiones_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservaIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Reservar Sesiones Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/pago": {
+      "post": {
+        "tags": [
+          "reserva y pago"
+        ],
+        "summary": "CU-02 Registrar resultado de la pasarela (confirma y bloquea, o registra fallo)",
+        "operationId": "pagar_sesiones__sesion_id__pago_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Pagar Sesiones  Sesion Id  Pago Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/expirar": {
+      "post": {
+        "tags": [
+          "reserva y pago"
+        ],
+        "summary": "CU-02 Vencer el congelamiento (lo dispara un temporizador)",
+        "operationId": "expirar_sesiones__sesion_id__expirar_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Expirar Sesiones  Sesion Id  Expirar Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/cancelacion-estudiante": {
+      "post": {
+        "tags": [
+          "cancelación"
+        ],
+        "summary": "CU-03 Cancelar por el estudiante (reembolso 100/50/0 %)",
+        "operationId": "cancelar_estudiante_sesiones__sesion_id__cancelacion_estudiante_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitanteIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Cancelar Estudiante Sesiones  Sesion Id  Cancelacion Estudiante Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/cancelacion-tutor": {
+      "post": {
+        "tags": [
+          "cancelación"
+        ],
+        "summary": "Cancelación del tutor: compensación 100 % y marca si es tardía (US-08, US-09)",
+        "operationId": "cancelar_tutor_sesiones__sesion_id__cancelacion_tutor_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitanteIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Cancelar Tutor Sesiones  Sesion Id  Cancelacion Tutor Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/completar": {
+      "post": {
+        "tags": [
+          "ejecución"
+        ],
+        "summary": "Registrar evidencia de asistencia (US-04/05/06) y calcular comisión (US-19)",
+        "operationId": "completar_sesiones__sesion_id__completar_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenciaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Completar Sesiones  Sesion Id  Completar Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/no-show": {
+      "post": {
+        "tags": [
+          "ejecución"
+        ],
+        "summary": "Registrar No-Show (US-15)",
+        "operationId": "no_show_sesiones__sesion_id__no_show_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoShowIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response No Show Sesiones  Sesion Id  No Show Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/calificacion": {
+      "post": {
+        "tags": [
+          "ejecución"
+        ],
+        "summary": "Calificar sesión (US-18)",
+        "operationId": "calificar_sesiones__sesion_id__calificacion_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalificacionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Calificar Sesiones  Sesion Id  Calificacion Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/disputa": {
+      "post": {
+        "tags": [
+          "disputa y liquidación"
+        ],
+        "summary": "CU-04 Abrir disputa (detiene la liberación)",
+        "operationId": "abrir_disputa_sesiones__sesion_id__disputa_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Abrir Disputa Sesiones  Sesion Id  Disputa Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/resolucion": {
+      "post": {
+        "tags": [
+          "disputa y liquidación"
+        ],
+        "summary": "Soporte resuelve la revisión o disputa (máx. 72 h)",
+        "operationId": "resolver_sesiones__sesion_id__resolucion_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolucionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Resolver Sesiones  Sesion Id  Resolucion Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/liberacion": {
+      "post": {
+        "tags": [
+          "disputa y liquidación"
+        ],
+        "summary": "CU-05 Liberar pago neto al tutor (48 h sin disputa)",
+        "operationId": "liberar_sesiones__sesion_id__liberacion_post",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Liberar Sesiones  Sesion Id  Liberacion Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Detalle de sesión (Read Model)",
+        "operationId": "detalle_sesiones__sesion_id__get",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Detalle Sesiones  Sesion Id  Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sesiones/{sesion_id}/eventos": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Domain Events de la sesión (outbox)",
+        "operationId": "eventos_sesion_sesiones__sesion_id__eventos_get",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Eventos Sesion Sesiones  Sesion Id  Eventos Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soporte/disputas": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Cola de mediación de Soporte",
+        "operationId": "disputas_soporte_disputas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Disputas Soporte Disputas Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/liquidaciones/pendientes": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Pagos listos para liberar",
+        "operationId": "pendientes_liquidaciones_pendientes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response Pendientes Liquidaciones Pendientes Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/indicadores": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "KPIs del BRD sección 9 (NB-15)",
+        "operationId": "indicadores_indicadores_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Indicadores Indicadores Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BloqueIn": {
+        "properties": {
+          "bloque_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Bloque Id",
+            "examples": [
+              "B-1"
+            ]
+          },
+          "inicio": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Inicio",
+            "examples": [
+              "2026-11-20T16:00:00Z"
+            ]
+          },
+          "fin": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fin",
+            "examples": [
+              "2026-11-20T17:00:00Z"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "bloque_id",
+          "inicio",
+          "fin"
+        ],
+        "title": "BloqueIn"
+      },
+      "CalificacionIn": {
+        "properties": {
+          "estudiante_id": {
+            "type": "string",
+            "title": "Estudiante Id"
+          },
+          "puntos": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Puntos"
+          },
+          "comentario": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Comentario",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "estudiante_id",
+          "puntos"
+        ],
+        "title": "CalificacionIn"
+      },
+      "DisputaIn": {
+        "properties": {
+          "solicitante_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Solicitante Id"
+          },
+          "motivo": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Motivo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "solicitante_id",
+          "motivo"
+        ],
+        "title": "DisputaIn"
+      },
+      "ErrorOut": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo"
+          },
+          "mensaje": {
+            "type": "string",
+            "title": "Mensaje"
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "mensaje"
+        ],
+        "title": "ErrorOut"
+      },
+      "EvidenciaIn": {
+        "properties": {
+          "conexion_tutor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conexion Tutor"
+          },
+          "conexion_estudiante": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conexion Estudiante"
+          },
+          "checkin_dentro_de_geocerca": {
+            "type": "boolean",
+            "title": "Checkin Dentro De Geocerca",
+            "default": false
+          },
+          "confirma_estudiante": {
+            "type": "boolean",
+            "title": "Confirma Estudiante",
+            "default": false
+          },
+          "confirma_tutor": {
+            "type": "boolean",
+            "title": "Confirma Tutor",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "EvidenciaIn"
+      },
+      "Modalidad": {
+        "type": "string",
+        "enum": [
+          "EnLinea",
+          "Presencial"
+        ],
+        "title": "Modalidad"
+      },
+      "NoShowIn": {
+        "properties": {
+          "parte_ausente": {
+            "$ref": "#/components/schemas/ParteSesion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "parte_ausente"
+        ],
+        "title": "NoShowIn"
+      },
+      "PagoIn": {
+        "properties": {
+          "monto": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Monto",
+            "examples": [
+              "350.00"
+            ]
+          },
+          "resultado": {
+            "type": "string",
+            "pattern": "^(Confirmado|Fallido)$",
+            "title": "Resultado",
+            "description": "Resultado devuelto por la pasarela de pago",
+            "default": "Confirmado"
+          },
+          "motivo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo",
+            "description": "Motivo del rechazo cuando resultado=Fallido"
+          }
+        },
+        "type": "object",
+        "required": [
+          "monto"
+        ],
+        "title": "PagoIn"
+      },
+      "ParteSesion": {
+        "type": "string",
+        "enum": [
+          "Estudiante",
+          "Tutor"
+        ],
+        "title": "ParteSesion"
+      },
+      "ReservaIn": {
+        "properties": {
+          "sesion_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Sesion Id"
+          },
+          "estudiante_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Estudiante Id"
+          },
+          "tutor_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Tutor Id"
+          },
+          "bloque_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Bloque Id"
+          },
+          "modalidad": {
+            "$ref": "#/components/schemas/Modalidad",
+            "default": "EnLinea"
+          },
+          "sede_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sede Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sesion_id",
+          "estudiante_id",
+          "tutor_id",
+          "bloque_id"
+        ],
+        "title": "ReservaIn",
+        "example": {
+          "bloque_id": "B-1121-16",
+          "estudiante_id": "E-001",
+          "modalidad": "EnLinea",
+          "sesion_id": "S-001",
+          "tutor_id": "T-001"
+        }
+      },
+      "ResolucionIn": {
+        "properties": {
+          "a_favor_de": {
+            "$ref": "#/components/schemas/ParteSesion"
+          },
+          "resolucion": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Resolucion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "a_favor_de",
+          "resolucion"
+        ],
+        "title": "ResolucionIn"
+      },
+      "SedeIn": {
+        "properties": {
+          "sede_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Sede Id"
+          },
+          "nombre": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Nombre"
+          },
+          "cupo_maximo": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Cupo Maximo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sede_id",
+          "nombre",
+          "cupo_maximo"
+        ],
+        "title": "SedeIn"
+      },
+      "SolicitanteIn": {
+        "properties": {
+          "solicitante_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Solicitante Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "solicitante_id"
+        ],
+        "title": "SolicitanteIn"
+      },
+      "TutorIn": {
+        "properties": {
+          "tutor_id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Tutor Id",
+            "examples": [
+              "T-100"
+            ]
+          },
+          "nombre": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Nombre",
+            "examples": [
+              "Ana López (Cálculo)"
+            ]
+          },
+          "tarifa_hora": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Tarifa Hora",
+            "examples": [
+              "350.00"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "tutor_id",
+          "nombre",
+          "tarifa_hora"
+        ],
+        "title": "TutorIn"
+      }
+    }
+  }
+}

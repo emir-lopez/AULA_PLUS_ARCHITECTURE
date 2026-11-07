@@ -1,0 +1,21 @@
+﻿caso_id,operacion_id,resultado_alumno,evidencia
+AUL-S001,AUL-O001,FINALIZADA,"estado=Completada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada,SesionCompletada"
+AUL-S002,AUL-O002,CANCELADA,"estado=Cancelada; eventos=SesionReservada,CongelamientoExpirado,SesionCancelada"
+AUL-S003,AUL-O003,EXCEPCION:TransicionInvalida,codigo=TransicionInvalida; estado_final=PREINSCRITA
+AUL-S004,AUL-O004,EXCEPCION:TransicionInvalida,codigo=TransicionInvalida; estado_final=PREINSCRITA
+AUL-S005,AUL-O005,INSCRITA,"estado=Confirmada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada"
+AUL-S006,AUL-O006,FINALIZADA,"estado=Completada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada,SesionCompletada"
+AUL-S007,AUL-O007,CANCELADA,"estado=Cancelada; eventos=SesionReservada,CongelamientoExpirado,SesionCancelada"
+AUL-S008,AUL-O008,EXCEPCION:ReglaDeNegocioViolada,codigo=PagoNoAutorizado; estado_final=PREINSCRITA
+AUL-S009,AUL-O009,EXCEPCION:TransicionInvalida,codigo=TransicionInvalida; estado_final=PREINSCRITA
+AUL-S010,AUL-O010,INSCRITA,"estado=Confirmada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada"
+AUL-S011,AUL-O011,FINALIZADA,"estado=Completada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada,SesionCompletada"
+AUL-S012,AUL-O012,CANCELADA,"estado=Cancelada; eventos=SesionReservada,CongelamientoExpirado,SesionCancelada"
+AUL-S013,AUL-O013,EXCEPCION:ReglaDeNegocioViolada,codigo=OperacionSinLineas; estado_final=PREINSCRITA
+AUL-S014,AUL-O014,EXCEPCION:TransicionInvalida,codigo=TransicionInvalida; estado_final=PREINSCRITA
+AUL-S015,AUL-O015,INSCRITA,"estado=Confirmada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada"
+AUL-S016,AUL-O016,EXCEPCION:ReglaDeNegocioViolada,codigo=PagoNoAutorizado; estado_final=PREINSCRITA
+AUL-S017,AUL-O017,CANCELADA,"estado=Cancelada; eventos=SesionReservada,CongelamientoExpirado,SesionCancelada"
+AUL-S018,AUL-O018,EXCEPCION:TransicionInvalida,codigo=TransicionInvalida; estado_final=PREINSCRITA
+AUL-S019,AUL-O019,EXCEPCION:TransicionInvalida,codigo=TransicionInvalida; estado_final=PREINSCRITA
+AUL-S020,AUL-O020,INSCRITA,"estado=Confirmada; eventos=SesionReservada,PagoConfirmado,SesionConfirmada"
