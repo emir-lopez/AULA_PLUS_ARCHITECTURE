@@ -3,6 +3,7 @@
 - Especificación: [`openapi.json`](openapi.json) (OpenAPI 3.1, generada desde el código con `python scripts/exportar_openapi.py`).
 - Swagger UI: `http://localhost:8000/docs` (local / Docker) y https://aula-plus-architecture.onrender.com/docs (producción).
 - ReDoc: `/redoc`. Salud: `GET /health`.
+- Todos los endpoints aceptan la cabecera opcional `X-Fecha-Simulada` (visible en Swagger). Solo se aplica con `PERMITIR_FECHA_SIMULADA=true`, para demostrar plazos de 10 min, 48 h y 72 h.
 
 ## Endpoints
 

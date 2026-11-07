@@ -11,8 +11,8 @@ Domain Events, API REST (FastAPI + OpenAPI), PostgreSQL, pruebas ≥ 80 %, Docke
 
 | Indicador | Resultado |
 |---|---|
-| Pruebas | 212 (unitarias + integración + PostgreSQL real) — todas en verde |
-| Cobertura | 98.7 % líneas y ramas (mínimo exigido 80 %) |
+| Pruebas | 216 (unitarias + integración + PostgreSQL real) — todas en verde |
+| Cobertura | 98.74 % líneas y ramas (mínimo exigido 80 %) |
 | Historias de usuario | 19 con Gherkin (18 implementadas y probadas, 1 en backlog documentado) |
 | Paquete del PIA | 120 casos + 20 transiciones ejecutados por el dominio ([evidencia](docs/evidencias/)) |
 
@@ -56,7 +56,7 @@ uvicorn api.main:app --app-dir src --reload
 ## 3. Pruebas y calidad
 
 ```bash
-pytest                                              # 209 pruebas (las 3 de PostgreSQL se omiten sin BD)
+pytest                                              # 213 pruebas (las 3 de PostgreSQL se omiten sin BD)
 pytest --cov --cov-report=term-missing --cov-fail-under=80
 ruff check src tests scripts
 TEST_DATABASE_URL=postgresql+psycopg://aulaplus:aulaplus_local@localhost:5432/aulaplus_test pytest   # con el db de compose
@@ -71,6 +71,7 @@ python scripts/exportar_openapi.py                  # regenera docs/api/openapi.
 | `tests/integration/test_api.py` | Contrato HTTP: 200/201, 400, 404, 409, 422, Swagger y cabecera `X-Fecha-Simulada` |
 | `tests/integration/test_paquete_pia.py` | Los CSV del docente: claves foráneas, totales con `Decimal`, 120 casos y 20 transiciones |
 | `tests/integration/test_us12_us13.py` | Extensión de sesión (US-12), falla de conexión (US-13) y migración de columnas |
+| `tests/integration/test_demo_seed_y_swagger.py` | Carga demo idempotente con horarios futuros y cabecera `X-Fecha-Simulada` en OpenAPI |
 | `tests/integration/test_postgres.py` | PostgreSQL real: zona horaria, 5 reservas concurrentes del mismo bloque, último cupo de sede entre tres tutores |
 
 ## 4. CI/CD
@@ -105,7 +106,7 @@ La URL `postgres://` de Render se normaliza automáticamente; el puerto se toma 
 |---|---|---|
 | `DATABASE_URL` | `sqlite:///./aulaplus.db` | Conexión (en compose apunta a `db`) |
 | `APP_ENV` | `development` | Etiqueta del entorno (`/health`) |
-| `SEED_DEMO` | `false` | Carga 3 tutores, 60 bloques y 2 sedes ficticios |
+| `SEED_DEMO` | `false` | En cada arranque crea 3 tutores y 2 sedes ficticios y completa sus horarios de los próximos 14 días (sin duplicar) |
 | `PERMITIR_FECHA_SIMULADA` | `false` | Habilita la cabecera `X-Fecha-Simulada` para la demo |
 | `MINUTOS_CONGELAMIENTO` · `HORAS_RETENCION` · `HORAS_MEDIACION` · `MINUTOS_TOLERANCIA_NO_SHOW` · `HORAS_ANTICIPACION_MINIMA` · `DIAS_VIGENCIA_AGENDA` · `MARCAS_PARA_SUSPENSION` | 10 · 48 · 72 · 10 · 2 · 7 · 3 | Parámetros de negocio del BRD |
 | `POSTGRES_USER` · `POSTGRES_PASSWORD` · `POSTGRES_DB` · `APP_PORT` · `DB_PORT` | ver `.env.example` | Docker Compose |
@@ -131,8 +132,9 @@ scripts/           exportar_openapi.py · ejecutar_paquete_pia.py
 
 ## 8. Guion de la demo en vivo (Swagger, ~8 min)
 
-Con `SEED_DEMO=true` y `PERMITIR_FECHA_SIMULADA=true`. Para los pasos con plazos, agrega la cabecera
-`X-Fecha-Simulada` en Swagger o usa `curl -H "X-Fecha-Simulada: 2026-11-21T17:05:00Z"`.
+Con `SEED_DEMO=true` y `PERMITIR_FECHA_SIMULADA=true`. Para los pasos con plazos, llena el campo
+`X-Fecha-Simulada` que Swagger muestra en cada endpoint (o usa `curl -H "X-Fecha-Simulada: 2026-11-21T17:05:00Z"`).
+Déjalo vacío para usar la hora real.
 
 1. `GET /health` → PostgreSQL conectado.
 2. `GET /tutores/disponibles` (mañana 16:00–17:00) → elegir `tutor_id` y `bloque_id`.

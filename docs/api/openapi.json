@@ -36,15 +36,35 @@
         ],
         "summary": "Registrar tutor y su agenda (NB-02)",
         "operationId": "registrar_tutor_tutores_post",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TutorIn"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -52,8 +72,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Registrar Tutor Tutores Post"
                 }
               }
@@ -118,6 +138,24 @@
               "type": "string",
               "title": "Tutor Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -193,15 +231,35 @@
         ],
         "summary": "Registrar sede presencial",
         "operationId": "registrar_sede_sedes_post",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SedeIn"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -209,8 +267,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Registrar Sede Sedes Post"
                 }
               }
@@ -286,6 +344,24 @@
               "format": "date-time",
               "title": "Fin"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "responses": {
@@ -354,15 +430,35 @@
         ],
         "summary": "CU-01 Reservar sesión (congela el horario 10 min)",
         "operationId": "reservar_sesiones_post",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ReservaIn"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -370,8 +466,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Reservar Sesiones Post"
                 }
               }
@@ -436,6 +532,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -520,6 +634,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "responses": {
@@ -594,6 +726,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -678,6 +828,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -762,6 +930,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -846,6 +1032,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -930,6 +1134,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -1014,6 +1236,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -1098,6 +1338,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "responses": {
@@ -1172,6 +1430,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -1256,6 +1532,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -1340,6 +1634,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "requestBody": {
@@ -1424,6 +1736,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "responses": {
@@ -1498,6 +1828,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "responses": {
@@ -1572,6 +1920,24 @@
               "type": "string",
               "title": "Sesion Id"
             }
+          },
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
           }
         ],
         "responses": {
@@ -1640,17 +2006,37 @@
         ],
         "summary": "Cola de mediación de Soporte",
         "operationId": "disputas_soporte_disputas_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "additionalProperties": true,
-                    "type": "object"
-                  },
                   "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
                   "title": "Response Disputas Soporte Disputas Get"
                 }
               }
@@ -1706,16 +2092,36 @@
         ],
         "summary": "Pagos listos para liberar",
         "operationId": "pendientes_liquidaciones_pendientes_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "type": "array",
                   "title": "Response Pendientes Liquidaciones Pendientes Get"
                 }
               }
@@ -1771,14 +2177,34 @@
         ],
         "summary": "KPIs del BRD sección 9 (NB-15)",
         "operationId": "indicadores_indicadores_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Indicadores Indicadores Get"
                 }
               }

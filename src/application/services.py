@@ -82,6 +82,15 @@ class ServicioAgendaTutor(_ServicioBase):
             uow.confirmar()
         return agenda
 
+    def publicar_disponibilidad(self, tutor_id: str, bloques: list[tuple[str, VentanaHoraria]]) -> int:
+        """Publica varios bloques en una sola transacción; devuelve cuántos eran nuevos."""
+        with self.fabrica_uow() as uow:
+            agenda = uow.agendas.obtener_del_tutor(tutor_id)
+            agregados = agenda.publicar_disponibilidad(bloques, self._ahora())
+            uow.agendas.guardar(agenda)
+            uow.confirmar()
+        return agregados
+
     def registrar_sede(self, sede: Sede) -> Sede:
         with self.fabrica_uow() as uow:
             uow.sedes.agregar(sede)
