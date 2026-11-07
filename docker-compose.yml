@@ -1,0 +1,67 @@
+# AulaPlus - entorno reproducible DB + App + Tests
+#
+#   docker compose up -d --build              -> db + app   (Swagger: http://localhost:8000/docs)
+#   docker compose --profile test run --rm tests   -> suite completa contra PostgreSQL real
+#   docker compose down -v                    -> detener y borrar datos
+#
+# La configuración viene de variables de entorno (.env, ver .env.example).
+
+name: aulaplus
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-aulaplus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aulaplus_local}
+      POSTGRES_DB: ${POSTGRES_DB:-aulaplus}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      target: runtime
+    image: aulaplus-app:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-aulaplus}:${POSTGRES_PASSWORD:-aulaplus_local}@db:5432/${POSTGRES_DB:-aulaplus}
+      APP_ENV: ${APP_ENV:-docker}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      PERMITIR_FECHA_SIMULADA: ${PERMITIR_FECHA_SIMULADA:-true}
+      HORAS_RETENCION: ${HORAS_RETENCION:-48}
+      HORAS_MEDIACION: ${HORAS_MEDIACION:-72}
+      MINUTOS_CONGELAMIENTO: ${MINUTOS_CONGELAMIENTO:-10}
+      MARCAS_PARA_SUSPENSION: ${MARCAS_PARA_SUSPENSION:-3}
+      PORT: 8000
+    ports:
+      - "${APP_PORT:-8000}:8000"
+
+  tests:
+    build:
+      context: .
+      target: test
+    profiles: ["test"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Las pruebas marcadas "postgres" usan esta base dedicada (creada por docker/postgres/init).
+      TEST_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-aulaplus}:${POSTGRES_PASSWORD:-aulaplus_local}@db:5432/aulaplus_test
+    volumes:
+      - ./reports:/app/reports
+
+volumes:
+  pgdata:

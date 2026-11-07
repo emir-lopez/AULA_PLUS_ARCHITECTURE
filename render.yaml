@@ -1,0 +1,37 @@
+# Render Blueprint: crea la base PostgreSQL y el Web Service (Docker) con un clic.
+# Render > New > Blueprint > seleccionar este repositorio.
+databases:
+  - name: aulaplus-db
+    plan: free
+    databaseName: aulaplus
+    user: aulaplus
+
+services:
+  - type: web
+    name: aulaplus-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aulaplus-db
+          property: connectionString
+      - key: APP_ENV
+        value: production
+      - key: SEED_DEMO
+        value: "true"
+      # Solo para la defensa (demostrar plazos de 10 min / 48 h / 72 h). Poner en "false" después.
+      - key: PERMITIR_FECHA_SIMULADA
+        value: "true"
+      - key: HORAS_RETENCION
+        value: "48"
+      - key: HORAS_MEDIACION
+        value: "72"
+      - key: MINUTOS_CONGELAMIENTO
+        value: "10"
+      - key: MARCAS_PARA_SUSPENSION
+        value: "3"
