@@ -1,4 +1,9 @@
-"""Datos ficticios de demostración (SEED_DEMO=true). Idempotente: no duplica si ya existen."""
+"""Datos ficticios de demostración (SEED_DEMO=true).
+
+Idempotente: se ejecuta en cada arranque, crea lo que falte y completa los horarios de los
+próximos ``dias`` sin duplicar. Así la demo siempre tiene bloques futuros y los tutores
+siguen visibles (R-10: perfil actualizado en los últimos 7 días).
+"""
 from __future__ import annotations
 
 from datetime import datetime, time, timedelta
@@ -15,25 +20,32 @@ TUTORES = [
     ("T-003", "Sofía Garza (Redes)", "300.00"),
 ]
 SEDES = [Sede("SEDE-FIME", "Biblioteca FIME", cupo_maximo=2), Sede("SEDE-CENTRO", "Sala Centro", cupo_maximo=10)]
+HORAS = (9, 11, 16, 18)
 
 
-def sembrar(servicio: ServicioAgendaTutor, ahora: datetime, dias: int = 5) -> int:
-    creados = 0
+def bloques_demo(ahora: datetime, dias: int) -> list[tuple[str, VentanaHoraria]]:
+    manana = (ahora + timedelta(days=1)).date()
+    bloques = []
+    for d in range(dias):
+        dia = manana + timedelta(days=d)
+        for hora in HORAS:
+            inicio = datetime.combine(dia, time(hora), tzinfo=ahora.tzinfo)
+            ventana = VentanaHoraria(inicio, inicio + timedelta(hours=1))
+            bloques.append((f"B-{dia.strftime('%m%d')}-{hora:02d}", ventana))
+    return bloques
+
+
+def sembrar(servicio: ServicioAgendaTutor, ahora: datetime, dias: int = 14) -> int:
     for sede in SEDES:
         try:
             servicio.registrar_sede(sede)
         except ConflictoDeRecurso:
             pass
-    manana = (ahora + timedelta(days=1)).date()
+    agregados = 0
     for tutor_id, nombre, tarifa in TUTORES:
         try:
             servicio.registrar_tutor(tutor_id, nombre, Dinero(Decimal(tarifa)))
         except ConflictoDeRecurso:
-            continue  # ya sembrado
-        for d in range(dias):
-            for hora in (9, 11, 16, 18):
-                inicio = datetime.combine(manana + timedelta(days=d), time(hora), tzinfo=ahora.tzinfo)
-                bloque_id = f"B-{(manana + timedelta(days=d)).strftime('%m%d')}-{hora:02d}"
-                servicio.agregar_bloque(tutor_id, bloque_id, VentanaHoraria(inicio, inicio + timedelta(hours=1)))
-                creados += 1
-    return creados
+            pass  # ya existía: solo se completan sus horarios
+        agregados += servicio.publicar_disponibilidad(tutor_id, bloques_demo(ahora, dias))
+    return agregados

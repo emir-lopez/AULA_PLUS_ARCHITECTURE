@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from fastapi import APIRouter, Query, Request, status
+from fastapi import APIRouter, Depends, Header, Query, Request, status
 
 from application.queries import ObtenerDetalleSesionQuery, ObtenerTutoresDisponiblesQuery
 from application.services import SolicitudReserva
@@ -37,7 +37,18 @@ ERRORES = {
     422: {"model": ErrorOut, "description": "Regla de negocio violada / validación"},
 }
 
-router = APIRouter(responses=ERRORES)
+
+def _fecha_simulada(
+    x_fecha_simulada: str | None = Header(
+        None, alias="X-Fecha-Simulada",
+        description="Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, "
+                    "ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+    ),
+) -> None:
+    """Declara la cabecera en OpenAPI para que Swagger la muestre; la aplica el middleware de api/main.py."""
+
+
+router = APIRouter(responses=ERRORES, dependencies=[Depends(_fecha_simulada)])
 
 
 def _c(request: Request) -> Contenedor:

@@ -48,6 +48,20 @@ class AgendaTutor:
         self.actualizada_en = exigir_zona_horaria(ahora)
         return bloque
 
+    def publicar_disponibilidad(self, bloques: list[tuple[str, VentanaHoraria]], ahora: datetime) -> int:
+        """El tutor publica varios bloques a la vez; omite los que ya existen o se empalman (INV-AT-01).
+
+        Publicar disponibilidad cuenta como actualizar la agenda (R-10), aunque todos los bloques ya existieran.
+        """
+        agregados = 0
+        for bloque_id, ventana in bloques:
+            if bloque_id in self.bloques or any(b.ventana.se_empalma(ventana) for b in self.bloques.values()):
+                continue
+            self.bloques[bloque_id] = BloqueDeAgenda(bloque_id, ventana)
+            agregados += 1
+        self.actualizada_en = exigir_zona_horaria(ahora)
+        return agregados
+
     def bloque(self, bloque_id: str) -> BloqueDeAgenda:
         try:
             return self.bloques[bloque_id]
