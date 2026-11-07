@@ -46,6 +46,7 @@ class LecturasSql:
                     "resolucion": f.disputa_resolucion, "resuelta_en": _iso(f.disputa_resuelta_en),
                 },
                 "calificacion": f.calificacion_puntos, "liberado_en": _iso(f.liberado_en),
+                "minutos_extension": f.minutos_extension or 0, "falla_conexion_desde": _iso(f.falla_conexion_desde),
                 "version": f.version,
             }
 

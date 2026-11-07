@@ -68,3 +68,5 @@ class ParametrosOperacion:
     minutos_tolerancia_no_show: int = 10
     horas_anticipacion_minima: int = 2
     dias_vigencia_agenda: int = 7
+    minutos_tolerancia_conexion: int = 15
+    minutos_maximos_extension: int = 60

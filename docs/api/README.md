@@ -1,7 +1,7 @@
 # API REST — contrato OpenAPI
 
 - Especificación: [`openapi.json`](openapi.json) (OpenAPI 3.1, generada desde el código con `python scripts/exportar_openapi.py`).
-- Swagger UI: `http://localhost:8000/docs` (local / Docker) y `https://<servicio>.onrender.com/docs` (producción).
+- Swagger UI: `http://localhost:8000/docs` (local / Docker) y https://aula-plus-architecture.onrender.com/docs (producción).
 - ReDoc: `/redoc`. Salud: `GET /health`.
 
 ## Endpoints
@@ -19,6 +19,8 @@
 | POST | `/sesiones/{id}/cancelacion-tutor` | US-08 | 200 | 409, 422 |
 | POST | `/sesiones/{id}/completar` | US-04/05/06/19 | 200 | 409, 422 SesionNoFinalizada |
 | POST | `/sesiones/{id}/no-show` | US-15 | 200 | 409, 422 ToleranciaNoCumplida |
+| POST | `/sesiones/{id}/extension` | US-12 Extender (15 min, máx. 60) | 200 | 400 ExtensionInvalida, 409 ExtensionEmpalmada, 422 MontoDeExtensionIncorrecto |
+| POST | `/sesiones/{id}/falla-conexion` · `/reconexion` | US-13 | 200 | 422 SesionNoEnCurso / SinFallaReportada |
 | POST | `/sesiones/{id}/calificacion` | US-18 | 200 | 422 SesionYaCalificada |
 | POST | `/sesiones/{id}/disputa` | CU-04 | 200 | 409, 422 VentanaDeDisputaCerrada / DisputaYaAbierta |
 | POST | `/sesiones/{id}/resolucion` | Mediación de Soporte | 200 | 400, 409 |

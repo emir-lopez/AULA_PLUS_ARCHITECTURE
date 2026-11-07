@@ -1,6 +1,6 @@
 # User Stories y criterios de aceptación (Gherkin) — AulaPlus
 
-19 historias (mínimo exigido: 15). Cada escenario indica la **prueba automatizada** que lo verifica.
+19 historias (mínimo exigido: 15): 18 implementadas y probadas, 1 en backlog (US-10). Cada escenario indica la **prueba automatizada** que lo verifica.
 Estado: ✅ implementada y probada · ⏳ backlog documentado.
 
 ---
@@ -171,13 +171,39 @@ Escenario: Perfil vencido
 ```
 Pruebas: `test_specifications_y_estados.py::TestReservaPermitida`, `test_api.py::test_consultas_de_disponibilidad_y_sede`
 
-## US-12 — Extensión de sesión ⏳ (NB-08, R-12)
-Como **estudiante**, quiero extender una sesión en curso, pagando dentro de la plataforma.
-Estado: backlog; el cobro reutilizaría `Dinero` y el flujo de pago de CU-02.
+## US-12 — Extensión de sesión ✅ (NB-08, R-12, R-17)
+Como **estudiante**, quiero solicitar la extensión de una sesión, para continuar la tutoría cuando necesite más tiempo.
 
-## US-13 — Falla de conexión ⏳ (NB-09)
-Como **soporte**, quiero registrar fallas de conexión y aplicar la tolerancia de 15 minutos.
-Estado: backlog; se modelaría como evento `FallaDeConexionReportada` y transición a `EnRevision`.
+```gherkin
+Escenario: Extensión pagada dentro de la plataforma
+  Dado una sesión Confirmada en curso con tarifa de 350.00 MXN/h
+  Cuando el estudiante solicita 30 minutos y paga 175.00 MXN
+  Entonces la sesión termina 30 minutos después, el monto pasa a 525.00 y se emite SesionExtendida
+
+Escenario: Bloques inválidos o pago incorrecto
+  Cuando solicita 20 minutos, más de 60 en total o paga un monto distinto
+  Entonces el sistema responde ExtensionInvalida (400), ExtensionExcedeMaximo o MontoDeExtensionIncorrecto (422)
+
+Escenario: El tutor tiene otro horario después
+  Cuando la extensión se empalma con otro bloque del tutor
+  Entonces el sistema responde 409 ExtensionEmpalmada
+```
+Pruebas: `integration/test_us12_us13.py::TestExtensionDominio`, `test_servicio_extiende_bloque_y_detecta_empalme`
+
+## US-13 — Registro y atención de falla de conexión ✅ (NB-09, R-18)
+Como **soporte**, quiero registrar y atender una falla de conexión durante una sesión en línea, para dar seguimiento al incidente.
+
+```gherkin
+Escenario: Reconexión dentro de la tolerancia
+  Dado una sesión en línea en curso
+  Cuando una parte reporta falla de conexión y se reconecta a los 15 minutos
+  Entonces la sesión continúa Confirmada y se emiten FallaConexionReportada y ConexionRestablecida
+
+Escenario: Caída mayor a 15 minutos
+  Cuando la reconexión ocurre a los 15 minutos y 1 segundo
+  Entonces la sesión pasa a EnRevision con motivo "FallaDeConexion" para que Soporte la atienda
+```
+Pruebas: `integration/test_us12_us13.py::TestFallaConexionDominio`, `test_api_extension_y_falla`
 
 ## US-14 — Reserva presencial condicionada a cupo ✅ (R-07, NB-10)
 Como **estudiante**, quiero reservar una sesión presencial solo si hay cupo, para evitar sobrecupo.

@@ -77,6 +77,8 @@ class SesionRow(Base):
     calificacion_puntos: Mapped[int | None] = mapped_column(Integer, nullable=True)
     calificacion_comentario: Mapped[str | None] = mapped_column(String(500), nullable=True)
     liberado_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    minutos_extension: Mapped[int | None] = mapped_column(Integer, nullable=True, default=0)
+    falla_conexion_desde: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     version: Mapped[int] = mapped_column(Integer, default=0)
 
 
@@ -112,6 +114,21 @@ def crear_engine(url: str) -> Engine:
 
 def crear_esquema(engine: Engine) -> None:
     Base.metadata.create_all(engine)
+    _agregar_columnas_faltantes(engine)
+
+
+def _agregar_columnas_faltantes(engine: Engine) -> None:
+    """Migración mínima e idempotente: agrega columnas nuevas (nullable) a tablas que ya existían."""
+    from sqlalchemy import inspect, text
+
+    inspector = inspect(engine)
+    with engine.begin() as conn:
+        for tabla in Base.metadata.sorted_tables:
+            existentes = {c["name"] for c in inspector.get_columns(tabla.name)}
+            for columna in tabla.columns:
+                if columna.name not in existentes and columna.nullable:
+                    tipo = columna.type.compile(dialect=engine.dialect)
+                    conn.execute(text(f'ALTER TABLE {tabla.name} ADD COLUMN {columna.name} {tipo}'))
 
 
 def crear_fabrica_sesiones(engine: Engine) -> sessionmaker:

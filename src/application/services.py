@@ -211,6 +211,38 @@ class ServicioEjecucionSesion(_ServicioBase):
             uow.confirmar()
         return sesion
 
+    def extender_sesion(self, sesion_id: str, estudiante_id: str, minutos: int,
+                        monto_pagado: Dinero) -> TransaccionSesion:
+        """US-12: cobra la extensión dentro de la plataforma y alarga el bloque del tutor en la misma transacción."""
+        ahora = self._ahora()
+        with self.fabrica_uow() as uow:
+            sesion = uow.transacciones.obtener(sesion_id)
+            agenda = uow.agendas.obtener_del_tutor(sesion.tutor_id)
+            sesion.extender(estudiante_id, minutos, Dinero(agenda.tarifa_hora), monto_pagado, ahora,
+                            self.politicas.params.minutos_maximos_extension)
+            agenda.extender_bloque(sesion.bloque_id, sesion.sesion_id, sesion.ventana)
+            uow.transacciones.guardar(sesion)
+            uow.agendas.guardar(agenda)
+            uow.confirmar()
+        return sesion
+
+    def reportar_falla_conexion(self, sesion_id: str, solicitante_id: str) -> TransaccionSesion:
+        """US-13: registra la caída y la deja visible para Soporte."""
+        with self.fabrica_uow() as uow:
+            sesion = uow.transacciones.obtener(sesion_id)
+            sesion.reportar_falla_conexion(solicitante_id, self._ahora())
+            uow.transacciones.guardar(sesion)
+            uow.confirmar()
+        return sesion
+
+    def registrar_reconexion(self, sesion_id: str) -> TransaccionSesion:
+        with self.fabrica_uow() as uow:
+            sesion = uow.transacciones.obtener(sesion_id)
+            sesion.registrar_reconexion(self._ahora(), self.politicas.params)
+            uow.transacciones.guardar(sesion)
+            uow.confirmar()
+        return sesion
+
     def calificar(self, sesion_id: str, estudiante_id: str, calificacion: Calificacion) -> TransaccionSesion:
         with self.fabrica_uow() as uow:
             sesion = uow.transacciones.obtener(sesion_id)
