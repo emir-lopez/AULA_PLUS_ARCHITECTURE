@@ -206,6 +206,28 @@ def liberar(sesion_id: str, request: Request) -> dict:
 
 
 # ------------------------------------------------------------ consultas
+@router.get("/sesiones", tags=["consultas"], summary="Lista de sesiones (resumen)")
+def sesiones(request: Request) -> list[dict]:
+    return _c(request).consultas.sesiones()
+
+
+@router.get("/tutores", tags=["consultas"], summary="Tutores con marcas de incumplimiento y agenda vigente")
+def tutores(request: Request) -> list[dict]:
+    return _c(request).consultas.tutores()
+
+
+@router.get("/sedes", tags=["consultas"], summary="Sedes presenciales y su cupo")
+def sedes(request: Request) -> list[dict]:
+    return _c(request).consultas.sedes()
+
+
+@router.get("/parametros", tags=["consultas"], summary="Plazos de negocio y hora del servidor")
+def parametros(request: Request) -> dict:
+    c = _c(request)
+    return {**c.consultas.parametros(), "marcas_para_suspension": c.settings.marcas_para_suspension,
+            "permitir_fecha_simulada": c.settings.permitir_fecha_simulada}
+
+
 @router.get("/sesiones/{sesion_id}", tags=["consultas"], summary="Detalle de sesión (Read Model)")
 def detalle(sesion_id: str, request: Request) -> dict:
     return _detalle(_c(request), sesion_id)

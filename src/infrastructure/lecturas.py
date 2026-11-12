@@ -10,7 +10,7 @@ from domain.events import EventoDominio
 from domain.state_machine import EstadoBloque, EstadoPago, EstadoSesion
 from domain.value_objects import VentanaHoraria
 
-from .db import AgendaRow, BloqueRow, EventoOutboxRow, SesionRow, a_utc
+from .db import AgendaRow, BloqueRow, EventoOutboxRow, SedeRow, SesionRow, a_utc
 
 
 def _iso(valor: datetime | None) -> str | None:
@@ -49,6 +49,36 @@ class LecturasSql:
                 "minutos_extension": f.minutos_extension or 0, "falla_conexion_desde": _iso(f.falla_conexion_desde),
                 "version": f.version,
             }
+
+    def sesiones(self) -> list[dict]:
+        """Resumen de todas las sesiones, de la más reciente a la más antigua."""
+        with self.fabrica() as s:
+            filas = s.scalars(select(SesionRow).order_by(SesionRow.inicio.desc(), SesionRow.sesion_id)).all()
+            return [{"sesion_id": f.sesion_id, "estudiante_id": f.estudiante_id, "tutor_id": f.tutor_id,
+                     "modalidad": f.modalidad, "inicio": _iso(f.inicio), "fin": _iso(f.fin),
+                     "estado": f.estado, "estado_pago": f.estado_pago, "monto": _pesos(f.monto_centavos)}
+                    for f in filas]
+
+    def tutores(self, desde: datetime) -> list[dict]:
+        """Tutores con sus marcas de incumplimiento y los bloques que terminan después de ``desde``."""
+        with self.fabrica() as s:
+            agendas = s.scalars(select(AgendaRow).order_by(AgendaRow.tutor_id)).all()
+            bloques = s.scalars(select(BloqueRow).order_by(BloqueRow.inicio)).all()
+        por_tutor: dict[str, list[dict]] = {}
+        for b in bloques:
+            if a_utc(b.fin) > a_utc(desde):
+                por_tutor.setdefault(b.tutor_id, []).append({
+                    "bloque_id": b.bloque_id, "inicio": _iso(b.inicio), "fin": _iso(b.fin),
+                    "estado": b.estado, "sesion_id": b.sesion_id})
+        return [{"tutor_id": a.tutor_id, "nombre": a.nombre, "tarifa_hora": a.tarifa_hora,
+                 "marcas_incumplimiento": a.marcas_incumplimiento, "suspendido": a.suspendido,
+                 "actualizada_en": _iso(a.actualizada_en), "bloques": por_tutor.get(a.tutor_id, [])}
+                for a in agendas]
+
+    def sedes(self) -> list[dict]:
+        with self.fabrica() as s:
+            filas = s.scalars(select(SedeRow).order_by(SedeRow.sede_id)).all()
+            return [{"sede_id": f.sede_id, "nombre": f.nombre, "cupo_maximo": f.cupo_maximo} for f in filas]
 
     def tutores_disponibles(self, ventana: VentanaHoraria, ahora: datetime, dias_vigencia: int) -> list[dict]:
         limite = a_utc(ahora) - timedelta(days=dias_vigencia)

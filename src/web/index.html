@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AulaPlus</title>
+  <meta name="description" content="Tutorías de AulaPlus: reservar, pagar, impartir y liquidar sesiones.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Ir al contenido</a>
+
+  <header class="cabecera">
+    <a class="marca" href="#/">AulaPlus <span id="marca-rol"></span></a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#/agenda" data-vista="agenda" data-roles="cliente">Reservar</a>
+      <a href="#/sesiones" data-vista="sesiones" data-roles="cliente admin">Sesiones</a>
+      <a href="#/agenda" data-vista="agenda" data-roles="admin">Agenda</a>
+      <a href="#/soporte" data-vista="soporte" data-roles="admin">Soporte</a>
+      <a href="#/indicadores" data-vista="indicadores" data-roles="admin">Indicadores</a>
+      <a href="#/catalogo" data-vista="catalogo" data-roles="admin">Tutores y sedes</a>
+      <a href="/docs" data-roles="admin">API</a>
+    </nav>
+    <div class="identidad">
+      <label class="quien" data-roles="cliente">Estudiante
+        <input type="text" id="estudiante" maxlength="40" size="7" autocomplete="off">
+      </label>
+      <div class="roles" role="group" aria-label="Ver como">
+        <span>Ver como</span>
+        <button type="button" data-rol="cliente">Cliente</button>
+        <button type="button" data-rol="admin">Administrador</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="reloj" aria-label="Hora de la plataforma">
+    <div class="reloj-lectura">
+      <p class="reloj-titulo" id="reloj-titulo">Hora de la plataforma</p>
+      <p class="reloj-hora" id="reloj-hora" aria-live="off">&nbsp;</p>
+    </div>
+    <div class="reloj-controles" id="reloj-controles" hidden>
+      <div class="reloj-saltos" role="group" aria-label="Adelantar la hora">
+        <button type="button" data-salto="600000">+10 min</button>
+        <button type="button" data-salto="3600000">+1 h</button>
+        <button type="button" data-salto="86400000">+1 día</button>
+        <button type="button" data-salto="172800000">+48 h</button>
+      </div>
+      <form class="reloj-ir" id="reloj-ir">
+        <input type="datetime-local" id="reloj-fecha" aria-label="Ir a una fecha y hora" required>
+        <button type="submit">Ir</button>
+      </form>
+      <button type="button" class="reloj-real" id="reloj-real" hidden>Volver a la hora real</button>
+    </div>
+    <p class="reloj-aviso" id="reloj-aviso" hidden>Este servidor no permite simular la hora. Los plazos corren en tiempo real.</p>
+    <label class="reloj-zona">
+      Horas en
+      <select id="zona">
+        <option value="utc">UTC</option>
+        <option value="local">mi zona</option>
+      </select>
+    </label>
+  </section>
+
+  <main id="contenido" tabindex="-1"></main>
+
+  <dialog id="dialogo" aria-labelledby="dialogo-titulo"></dialog>
+  <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

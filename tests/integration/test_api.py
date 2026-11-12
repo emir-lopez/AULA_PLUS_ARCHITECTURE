@@ -176,3 +176,31 @@ def test_seed_demo_y_fecha_simulada_deshabilitada(reloj):
         assert len(r.json()) == 3
         # Sin PERMITIR_FECHA_SIMULADA la cabecera se ignora.
         assert c.get("/health", headers={"X-Fecha-Simulada": "x"}).status_code == 200
+
+
+def test_consultas_de_la_interfaz_web(client):
+    client.post("/sedes", json={"sede_id": "SEDE-1", "nombre": "Biblioteca", "cupo_maximo": 2})
+    reservar(client)
+    assert client.get("/sesiones").json() == [{
+        "sesion_id": "S-1", "estudiante_id": "E-1", "tutor_id": "T-1", "modalidad": "EnLinea",
+        "inicio": INICIO.isoformat(), "fin": FIN.isoformat(), "estado": "Reservada",
+        "estado_pago": "Pendiente", "monto": "350.00"}]
+    tutor = client.get("/tutores").json()[0]
+    assert (tutor["tutor_id"], tutor["suspendido"], tutor["marcas_incumplimiento"]) == ("T-1", False, 0)
+    assert tutor["bloques"] == [{"bloque_id": "B-1", "inicio": INICIO.isoformat(), "fin": FIN.isoformat(),
+                                 "estado": "Congelado", "sesion_id": "S-1"}]
+    # Los bloques que ya terminaron no se muestran en la agenda.
+    assert client.get("/tutores", headers=h(FIN + timedelta(minutes=1))).json()[0]["bloques"] == []
+    assert client.get("/sedes").json() == [{"sede_id": "SEDE-1", "nombre": "Biblioteca", "cupo_maximo": 2}]
+    parametros = client.get("/parametros").json()
+    assert parametros["ahora"] == AHORA.isoformat() and parametros["permitir_fecha_simulada"] is True
+    assert (parametros["minutos_congelamiento"], parametros["horas_retencion"],
+            parametros["marcas_para_suspension"]) == (10, 48, 3)
+
+
+def test_interfaz_web_se_sirve_en_app(client):
+    assert client.get("/", follow_redirects=False).headers["location"] == "/app/"
+    pagina = client.get("/app/")
+    assert pagina.status_code == 200 and "AulaPlus" in pagina.text
+    assert client.get("/app/app.js").status_code == 200
+    assert client.get("/app/styles.css").status_code == 200

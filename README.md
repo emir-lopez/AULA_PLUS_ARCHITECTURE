@@ -11,8 +11,8 @@ Domain Events, API REST (FastAPI + OpenAPI), PostgreSQL, pruebas ≥ 80 %, Docke
 
 | Indicador | Resultado |
 |---|---|
-| Pruebas | 216 (unitarias + integración + PostgreSQL real) — todas en verde |
-| Cobertura | 98.74 % líneas y ramas (mínimo exigido 80 %) |
+| Pruebas | 218 (unitarias + integración + PostgreSQL real) — todas en verde |
+| Cobertura | 98.76 % líneas y ramas (mínimo exigido 80 %) |
 | Historias de usuario | 19 con Gherkin (18 implementadas y probadas, 1 en backlog documentado) |
 | Paquete del PIA | 120 casos + 20 transiciones ejecutados por el dominio ([evidencia](docs/evidencias/)) |
 
@@ -25,6 +25,7 @@ Requisitos: Docker Desktop (Windows/macOS) o Docker Engine + Compose v2.
 ```bash
 cp .env.example .env                      # opcional: ajustar contraseñas y parámetros
 docker compose up -d --build              # db (PostgreSQL 16) + app
+# Interfaz:    http://localhost:8000/app/
 # Swagger UI:  http://localhost:8000/docs
 # Salud:       http://localhost:8000/health
 
@@ -36,7 +37,7 @@ docker compose down -v                         # detener y borrar datos
 | Servicio | Imagen | Función |
 |---|---|---|
 | `db` | `postgres:16-alpine` | Base de datos con volumen `pgdata` y healthcheck `pg_isready`. Crea también `aulaplus_test` |
-| `app` | etapa `runtime` del Dockerfile | API FastAPI con usuario sin root y HEALTHCHECK a `/health`; espera a que `db` esté sana |
+| `app` | etapa `runtime` del Dockerfile | API FastAPI e interfaz web (`/app/`) con usuario sin root y HEALTHCHECK a `/health`; espera a que `db` esté sana |
 | `tests` | etapa `test` (perfil `test`) | pytest + cobertura ≥ 80 % contra PostgreSQL; escribe `reports/coverage.xml` y `junit.xml` |
 
 > **Windows + OneDrive:** si `docker compose build` muestra `additional privileges requested: --allow=fs.read`,
@@ -53,10 +54,32 @@ cp .env.example .env                       # usa SQLite por defecto
 uvicorn api.main:app --app-dir src --reload
 ```
 
+## 2.1 Interfaz web
+
+La app sirve una interfaz en `/app/` (la raíz `/` redirige ahí). Son archivos estáticos en `src/web/` que consumen
+la misma API, sin dependencias ni paso de compilación, así que el contenedor `app` no cambia.
+
+El botón "Ver como" de la cabecera cambia entre dos vistas, para que se vea quién hace cada cosa:
+
+| Vista | Secciones | Acciones sobre una sesión |
+|---|---|---|
+| Cliente (el estudiante) | Reservar, Mis sesiones | Reservar (CU-01), pagar (CU-02), cancelar (CU-03), extender, reportar falla de conexión, calificar, abrir disputa (CU-04) |
+| Administrador | Sesiones, Agenda, Soporte, Indicadores, Tutores y sedes | Vencer el apartado, registrar asistencia o no-show, registrar reconexión, cancelar a nombre del tutor, resolver revisiones y liberar el pago (CU-05) |
+
+El cliente solo ve sus propias sesiones; el campo "Estudiante" de la cabecera cambia de estudiante. El administrador
+ve todas, además de la comisión, el neto del tutor y los Domain Events.
+
+Con `PERMITIR_FECHA_SIMULADA=true`, la barra superior adelanta la hora de la plataforma y cada plazo del detalle
+tiene un botón para ir a ese momento. Así se demuestran los límites de 10 min, 48 h y 72 h sin esperar. La interfaz
+envía la cabecera `X-Fecha-Simulada` en cada petición.
+
+Para la interfaz se agregaron cuatro consultas de solo lectura: `GET /sesiones`, `GET /tutores`, `GET /sedes` y
+`GET /parametros`.
+
 ## 3. Pruebas y calidad
 
 ```bash
-pytest                                              # 213 pruebas (las 3 de PostgreSQL se omiten sin BD)
+pytest                                              # 215 pruebas (las 3 de PostgreSQL se omiten sin BD)
 pytest --cov --cov-report=term-missing --cov-fail-under=80
 ruff check src tests scripts
 TEST_DATABASE_URL=postgresql+psycopg://aulaplus:aulaplus_local@localhost:5432/aulaplus_test pytest   # con el db de compose
@@ -125,6 +148,7 @@ src/
   application/     Application Services (casos de uso), Queries CQRS, puertos
   infrastructure/  SQLAlchemy, repositorios, Unit of Work + outbox, lecturas, config, importador del paquete PIA
   api/             FastAPI: endpoints, esquemas, manejo de errores, Composition Root
+  web/             Interfaz web estática (index.html, styles.css, app.js) servida en /app/
 tests/             unit/ · integration/ · data/paquete_pia/
 scripts/           exportar_openapi.py · ejecutar_paquete_pia.py
 .github/workflows/ci.yml · Dockerfile · docker-compose.yml · render.yaml · .env.example

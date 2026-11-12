@@ -6,9 +6,11 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from datetime import datetime
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from domain.exceptions import (
@@ -25,6 +27,8 @@ from infrastructure.seed import sembrar
 
 from .container import Contenedor, construir_contenedor
 from .routes import router
+
+WEB = Path(__file__).resolve().parents[1] / "web"
 
 ESTADO_HTTP: list[tuple[type[ErrorDeDominio], int]] = [
     (DatoInvalido, 400),
@@ -86,7 +90,7 @@ def create_app(settings: Settings | None = None, contenedor: Contenedor | None =
 
     @app.get("/", include_in_schema=False)
     def raiz() -> RedirectResponse:
-        return RedirectResponse("/docs")
+        return RedirectResponse("/app/")
 
     @app.get("/health", tags=["operación"], summary="Liveness/readiness: verifica la conexión a la DB")
     def health(request: Request) -> dict:
@@ -97,6 +101,8 @@ def create_app(settings: Settings | None = None, contenedor: Contenedor | None =
                 "database": settings.url_normalizada.split(":", 1)[0]}
 
     app.include_router(router)
+    # Interfaz web: archivos estáticos que consumen esta misma API (sin paso de compilación).
+    app.mount("/app", StaticFiles(directory=WEB, html=True), name="web")
     return app
 
 

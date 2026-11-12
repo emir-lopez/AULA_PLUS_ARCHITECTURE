@@ -1,7 +1,7 @@
 """CQRS básico (ADR-003): Queries con handlers que devuelven DTOs de lectura."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from domain.exceptions import RecursoNoEncontrado
 from domain.policies import ParametrosOperacion
@@ -35,6 +35,20 @@ class ConsultasAulaPlus:
         if not detalle:
             raise RecursoNoEncontrado("SesionNoEncontrada", f"No existe la sesión {query.sesion_id}")
         return detalle
+
+    def sesiones(self) -> list[dict]:
+        return self.lecturas.sesiones()
+
+    def tutores(self) -> list[dict]:
+        """Catálogo con la agenda vigente: solo bloques que aún no terminan."""
+        return self.lecturas.tutores(self.reloj.ahora())
+
+    def sedes(self) -> list[dict]:
+        return self.lecturas.sedes()
+
+    def parametros(self) -> dict:
+        """Plazos del BRD y hora del servidor, para que la interfaz calcule los mismos límites."""
+        return {"ahora": self.reloj.ahora().isoformat(), **asdict(self.params)}
 
     def pagos_listos_para_liberar(self) -> list[str]:
         return self.lecturas.pagos_listos_para_liberar(self.reloj.ahora(), self.params.horas_retencion)
