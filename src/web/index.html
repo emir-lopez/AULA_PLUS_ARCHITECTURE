@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AulaPlus</title>
+  <meta name="description" content="Tutorías de AulaPlus: reservar, pagar, impartir y liquidar sesiones.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg hidden aria-hidden="true">
+    <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-lista" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <symbol id="i-soporte" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24"/></symbol>
+    <symbol id="i-grafica" viewBox="0 0 24 24"><path d="M3 3v18h18M8 17v-5M13 17V7M18 17v-8"/></symbol>
+    <symbol id="i-personas" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-codigo" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-atras" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+  </svg>
+
+  <a class="saltar" href="#contenido">Ir al contenido</a>
+
+  <header class="cabecera">
+    <a class="marca" href="#/">
+      <svg class="marca-logo" viewBox="0 0 34 34" aria-hidden="true">
+        <rect width="34" height="34" rx="9"/>
+        <path class="logo-gis" d="M17 8v11M11.5 13.5h11" fill="none" stroke-width="3" stroke-linecap="round"/>
+        <path class="logo-tiza" d="M9 25.5h16" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span class="marca-nombre">AulaPlus</span>
+      <span class="marca-rol" id="marca-rol"></span>
+    </a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#/agenda" data-vista="agenda" data-roles="cliente"><svg class="icono" aria-hidden="true"><use href="#i-calendario"/></svg><span>Reservar</span></a>
+      <a href="#/sesiones" data-vista="sesiones" data-roles="cliente admin"><svg class="icono" aria-hidden="true"><use href="#i-lista"/></svg><span>Sesiones</span></a>
+      <a href="#/agenda" data-vista="agenda" data-roles="admin"><svg class="icono" aria-hidden="true"><use href="#i-calendario"/></svg><span>Agenda</span></a>
+      <a href="#/soporte" data-vista="soporte" data-roles="admin"><svg class="icono" aria-hidden="true"><use href="#i-soporte"/></svg><span>Soporte</span></a>
+      <a href="#/indicadores" data-vista="indicadores" data-roles="admin"><svg class="icono" aria-hidden="true"><use href="#i-grafica"/></svg><span>Indicadores</span></a>
+      <a href="#/catalogo" data-vista="catalogo" data-roles="admin"><svg class="icono" aria-hidden="true"><use href="#i-personas"/></svg><span>Tutores y sedes</span></a>
+      <a href="/docs" data-roles="admin"><svg class="icono" aria-hidden="true"><use href="#i-codigo"/></svg><span>API</span></a>
+    </nav>
+    <div class="identidad">
+      <label class="quien" data-roles="cliente">Estudiante
+        <input type="text" id="estudiante" maxlength="40" size="7" autocomplete="off">
+      </label>
+      <div class="roles" role="group" aria-label="Ver como">
+        <span>Ver como</span>
+        <div class="roles-opciones">
+          <button type="button" data-rol="cliente">Cliente</button>
+          <button type="button" data-rol="admin">Administrador</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="reloj" aria-label="Hora de la plataforma">
+    <div class="reloj-lectura">
+      <svg class="icono" aria-hidden="true"><use href="#i-reloj"/></svg>
+      <div>
+        <p class="reloj-titulo" id="reloj-titulo">Hora de la plataforma</p>
+        <p class="reloj-hora" id="reloj-hora" aria-live="off">&nbsp;</p>
+      </div>
+    </div>
+    <div class="reloj-controles" id="reloj-controles" hidden>
+      <div class="reloj-saltos" role="group" aria-label="Adelantar la hora">
+        <button type="button" data-salto="600000">+10 min</button>
+        <button type="button" data-salto="3600000">+1 h</button>
+        <button type="button" data-salto="86400000">+1 día</button>
+        <button type="button" data-salto="172800000">+48 h</button>
+      </div>
+      <form class="reloj-ir" id="reloj-ir">
+        <input type="datetime-local" id="reloj-fecha" aria-label="Ir a una fecha y hora" required>
+        <button type="submit">Ir</button>
+      </form>
+      <button type="button" class="reloj-real" id="reloj-real" hidden>Volver a la hora real</button>
+    </div>
+    <p class="reloj-aviso" id="reloj-aviso" hidden>Este servidor no permite simular la hora. Los plazos corren en tiempo real.</p>
+    <label class="reloj-zona">
+      Horas en
+      <select id="zona">
+        <option value="utc">UTC</option>
+        <option value="local">mi zona</option>
+      </select>
+    </label>
+  </section>
+
+  <main id="contenido" tabindex="-1"></main>
+
+  <dialog id="dialogo" aria-labelledby="dialogo-titulo"></dialog>
+  <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

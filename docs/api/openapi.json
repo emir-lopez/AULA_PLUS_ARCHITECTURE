@@ -120,6 +120,90 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Tutores con marcas de incumplimiento y agenda vigente",
+        "operationId": "tutores_tutores_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Tutores Tutores Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/tutores/{tutor_id}/bloques": {
@@ -270,6 +354,90 @@
                   "type": "object",
                   "additionalProperties": true,
                   "title": "Response Registrar Sede Sedes Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Sedes presenciales y su cupo",
+        "operationId": "sedes_sedes_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Sedes Sedes Get"
                 }
               }
             }
@@ -469,6 +637,90 @@
                   "type": "object",
                   "additionalProperties": true,
                   "title": "Response Reservar Sesiones Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Lista de sesiones (resumen)",
+        "operationId": "sesiones_sesiones_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Sesiones Sesiones Get"
                 }
               }
             }
@@ -1765,6 +2017,89 @@
                   "type": "object",
                   "additionalProperties": true,
                   "title": "Response Liberar Sesiones  Sesion Id  Liberacion Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transición inválida o conflicto de recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Regla de negocio violada / validación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parametros": {
+      "get": {
+        "tags": [
+          "consultas"
+        ],
+        "summary": "Plazos de negocio y hora del servidor",
+        "operationId": "parametros_parametros_get",
+        "parameters": [
+          {
+            "name": "X-Fecha-Simulada",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real.",
+              "title": "X-Fecha-Simulada"
+            },
+            "description": "Solo demo (PERMITIR_FECHA_SIMULADA=true): fija la hora de la petición, ISO-8601 con zona, p. ej. 2026-11-21T17:05:00Z. Vacío = hora real."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Parametros Parametros Get"
                 }
               }
             }
