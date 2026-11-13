@@ -142,7 +142,7 @@ function pintarRol() {
   document.querySelector("#marca-rol").textContent = esAdmin() ? "Administración" : "Estudiantes";
   for (const b of document.querySelectorAll("[data-rol]")) b.setAttribute("aria-pressed", String(b.dataset.rol === estado.rol));
   for (const el of document.querySelectorAll("[data-roles]")) el.hidden = !el.dataset.roles.split(" ").includes(estado.rol);
-  document.querySelector('.menu a[data-vista="sesiones"]').textContent = esAdmin() ? "Sesiones" : "Mis sesiones";
+  document.querySelector('.menu a[data-vista="sesiones"] span').textContent = esAdmin() ? "Sesiones" : "Mis sesiones";
   document.querySelector("#estudiante").value = estado.estudiante;
 }
 
@@ -158,6 +158,7 @@ async function siguienteSesionId() {
 const encabezado = (titulo, texto, extra = "") => `
   <div class="encabezado"><div><h1>${titulo}</h1>${texto ? `<p>${texto}</p>` : ""}</div>${extra}</div>`;
 const vacio = (titulo, texto) => `<div class="vacio"><strong>${titulo}</strong>${texto}</div>`;
+const regreso = (texto) => `<a class="regreso" href="#/sesiones"><svg class="icono" aria-hidden="true"><use href="#i-atras"/></svg>${texto}</a>`;
 
 async function vistaAgenda() {
   await cargarCatalogo();
@@ -174,36 +175,69 @@ async function vistaAgenda() {
       <span>${esc(fDiaSemana(muestra(d)))}</span><strong>${esc(numeroDia(muestra(d)))}</strong>
     </button>`).join("");
 
+  // El horario del día: una columna por periodo (rango de horas) y una fila por tutor.
+  const clavePeriodo = (b) => `${fecha(b.inicio).getTime()}-${fecha(b.fin).getTime()}`;
+  const delDia = (t) => t.bloques.filter((b) => claveDia(b.inicio) === estado.dia);
+  const periodos = [...new Map(estado.tutores.flatMap(delDia).map((b) => [clavePeriodo(b), b])).values()]
+    .sort((a, b) => fecha(a.inicio) - fecha(b.inicio) || fecha(a.fin) - fecha(b.fin));
+  const libres = estado.tutores.filter((t) => !t.suspendido).flatMap(delDia).filter((b) => b.estado === "Disponible").length;
+
+  const columnas = periodos.map((b) => `<th scope="col"><strong>${fHora(b.inicio)}</strong>a ${fHora(b.fin)}</th>`).join("");
   const filas = estado.tutores.map((t) => {
-    const bloques = t.bloques.filter((b) => claveDia(b.inicio) === estado.dia);
-    const horarios = bloques.map((b) => {
-      const rango = `${fHora(b.inicio)} a ${fHora(b.fin)}`;
+    const bloques = new Map(delDia(t).map((b) => [clavePeriodo(b), b]));
+    const [, persona = t.nombre, materia = ""] = /^(.*?)\s*\((.+)\)\s*$/.exec(t.nombre) ?? [];
+    const iniciales = persona.split(/\s+/).slice(0, 2).map((p) => p[0] ?? "").join("").toUpperCase();
+    const casillas = periodos.map((periodo) => {
+      const b = bloques.get(clavePeriodo(periodo));
+      if (!b) return '<td class="sin-horario"><span class="casilla vacia" aria-label="Sin horario">·</span></td>';
+      const hora = `<span class="casilla-hora">${fHora(b.inicio)} a ${fHora(b.fin)}</span>`;
       if (b.estado === "Disponible" && !t.suspendido && !esAdmin()) {
-        return `<li><button type="button" class="horario" data-reservar="${esc(t.tutor_id)}|${esc(b.bloque_id)}">
-          <strong>${rango}</strong><span>Disponible</span></button></li>`;
+        return `<td><button type="button" class="casilla libre" data-reservar="${esc(t.tutor_id)}|${esc(b.bloque_id)}">
+          ${hora}<span class="casilla-estado">Disponible</span></button></td>`;
       }
       const etiqueta = { Disponible: t.suspendido ? "Tutor suspendido" : "Disponible", Congelado: "Apartado, falta el pago", Bloqueado: "Reservado" }[b.estado] ?? "No disponible";
-      const contenido = `<strong>${rango}</strong><span>${etiqueta}</span>`;
+      const clase = b.estado === "Disponible" ? (t.suspendido ? "inactiva" : "libre") : esc(b.estado);
+      const contenido = `${hora}<span class="casilla-estado">${etiqueta}</span>`;
       return b.sesion_id && esAdmin()
-        ? `<li><a class="horario ${esc(b.estado)}" href="#/sesiones/${encodeURIComponent(b.sesion_id)}">${contenido}</a></li>`
-        : `<li><span class="horario ${esc(b.estado)}">${contenido}</span></li>`;
+        ? `<td><a class="casilla ${clase}" href="#/sesiones/${encodeURIComponent(b.sesion_id)}">${contenido}</a></td>`
+        : `<td><span class="casilla ${clase}">${contenido}</span></td>`;
     }).join("");
     return `
-      <li class="tutor">
-        <div class="tutor-datos">
-          <h3>${esc(t.nombre)}</h3>
-          <p>${pesos(t.tarifa_hora)} por hora${t.suspendido ? ` ${insignia("Suspendido")}` : ""}</p>
-        </div>
-        ${horarios ? `<ul class="horarios">${horarios}</ul>` : '<p class="suave">Sin horarios este día.</p>'}
-      </li>`;
+      <tr>
+        <th scope="row"><div class="tutor-ficha">
+          <span class="monograma" aria-hidden="true">${esc(iniciales)}</span>
+          <div>
+            <strong>${esc(persona)}</strong>
+            ${materia ? `<span class="materia">${esc(materia)}</span>` : ""}
+            <span>${pesos(t.tarifa_hora)} por hora</span>
+            ${t.suspendido ? insignia("Suspendido") : ""}
+          </div>
+        </div></th>
+        ${casillas}
+      </tr>`;
   }).join("");
 
   return encabezado(esAdmin() ? "Agenda" : "Reservar una tutoría", esAdmin()
     ? "Así ven los estudiantes la agenda. Las reservas se hacen desde la vista de cliente."
     : `Elige un horario disponible. La sesión debe empezar al menos ${estado.params.horas_anticipacion_minima} horas después de reservar.`) + `
-    <div class="dias" role="group" aria-label="Día">${tira}</div>
-    <h2 class="subtitulo">${esc(fDiaLargo(muestra(estado.dia)))}</h2>
-    <ul class="tutores">${filas}</ul>`;
+    <section class="pizarra" aria-labelledby="t-pizarra">
+      <div class="pizarra-cabeza">
+        <h2 class="pizarra-fecha" id="t-pizarra">${esc(fDiaLargo(muestra(estado.dia)))}</h2>
+        <p class="pizarra-nota">${libres === 1 ? "1 horario disponible" : `${libres} horarios disponibles`}</p>
+      </div>
+      <div class="dias" role="group" aria-label="Día">${tira}</div>
+      <div class="pizarra-rejilla">
+        <table class="periodos" style="--periodos: ${periodos.length}">
+          <thead><tr><th scope="col" class="col-tutor">Tutor</th>${columnas}</tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>
+      <ul class="gises" aria-label="Simbología">
+        <li class="gis-libre">Disponible</li>
+        <li class="gis-apartado">Apartado, falta el pago</li>
+        <li class="gis-ocupado">Reservado</li>
+      </ul>
+    </section>`;
 }
 
 async function vistaSesiones() {
@@ -220,7 +254,8 @@ async function vistaSesiones() {
   if (!estados.includes(estado.filtro)) estado.filtro = "Todas";
   const visibles = sesiones.filter((s) => estado.filtro === "Todas" || s.estado === estado.filtro);
   const filtros = estados.map((e) => `
-    <button type="button" class="filtro" data-filtro="${esc(e)}" aria-pressed="${e === estado.filtro}">${esc(nombre(e))}</button>`).join("");
+    <button type="button" class="filtro" data-filtro="${esc(e)}" aria-pressed="${e === estado.filtro}">${esc(nombre(e))}
+      <span class="conteo">${e === "Todas" ? sesiones.length : sesiones.filter((s) => s.estado === e).length}</span></button>`).join("");
   const filas = visibles.map((s) => `
     <tr>
       <td><a href="#/sesiones/${encodeURIComponent(s.sesion_id)}">${esc(s.sesion_id)}</a></td>
@@ -407,11 +442,11 @@ async function vistaSesion(id) {
       api("GET", `/sesiones/${encodeURIComponent(id)}`), api("GET", `/sesiones/${encodeURIComponent(id)}/eventos`), cargarCatalogo()]);
   } catch (error) {
     if (error.status !== 404) throw error;
-    return '<a class="regreso" href="#/sesiones">Todas las sesiones</a>' +
+    return regreso("Todas las sesiones") +
       vacio(`No existe la sesión ${esc(id)}`, "Revisa el identificador o vuelve a la lista.");
   }
   if (!esAdmin() && s.estudiante_id !== estado.estudiante) {
-    return '<a class="regreso" href="#/sesiones">Mis sesiones</a>' + vacio(`La sesión ${esc(id)} es de otro estudiante`,
+    return regreso("Mis sesiones") + vacio(`La sesión ${esc(id)} es de otro estudiante`,
       `Estás viendo AulaPlus como ${esc(estado.estudiante)}. Cambia de estudiante o entra como administrador.`);
   }
   const sede = estado.sedes.find((x) => x.sede_id === s.sede_id);
@@ -439,7 +474,7 @@ async function vistaSesion(id) {
   }).join("");
 
   return `
-    <a class="regreso" href="#/sesiones">${esAdmin() ? "Todas las sesiones" : "Mis sesiones"}</a>
+    ${regreso(esAdmin() ? "Todas las sesiones" : "Mis sesiones")}
     <div class="titulo-sesion"><h1>Sesión ${esc(s.sesion_id)}</h1>${insignia(s.estado)}</div>
     <dl class="ficha bloque">
       <div><dt>Tutor</dt><dd>${esc(nombreTutor(s.tutor_id))}</dd></div>
@@ -513,16 +548,19 @@ async function vistaIndicadores() {
   const estados = Object.entries(k.sesiones_por_estado);
   const total = estados.reduce((suma, [, n]) => suma + n, 0);
   return encabezado("Indicadores", "Los indicadores de la sección 9 del BRD, calculados sobre todas las sesiones.") + `
-    <section class="bloque panel">
-      <dl class="cifras">
-        <div><dt>Sesiones completadas</dt><dd class="cifra">${porcentaje(k.tasa_completadas)}</dd><small>De las que ya cerraron</small></div>
-        <div><dt>Ingreso por comisiones</dt><dd class="cifra">${pesos(k.ingreso_comisiones)}</dd><small>Solo pagos liberados</small></div>
-        <div><dt>Total reembolsado</dt><dd class="cifra">${pesos(k.total_reembolsado)}</dd><small>${porcentaje(k.porcentaje_reembolsos)} de lo cobrado</small></div>
-        <div><dt>Sesiones con disputa</dt><dd class="cifra">${k.sesiones_disputadas}</dd></div>
-      </dl>
-    </section>
+    <dl class="cifras bloque">
+      <div class="destacada"><dt>Sesiones completadas</dt><dd class="cifra">${porcentaje(k.tasa_completadas)}</dd>
+        ${k.tasa_completadas == null ? "" : `<span class="medidor" style="--v: ${(k.tasa_completadas * 100).toFixed(1)}"></span>`}
+        <small>De las que ya cerraron</small></div>
+      <div><dt>Ingreso por comisiones</dt><dd class="cifra">${pesos(k.ingreso_comisiones)}</dd><small>Solo pagos liberados</small></div>
+      <div><dt>Total reembolsado</dt><dd class="cifra">${pesos(k.total_reembolsado)}</dd><small>${porcentaje(k.porcentaje_reembolsos)} de lo cobrado</small></div>
+      <div><dt>Sesiones con disputa</dt><dd class="cifra">${k.sesiones_disputadas}</dd></div>
+    </dl>
     <section class="bloque"><h2>Sesiones por estado</h2>
-      ${total ? `<div class="tabla-envoltura"><table>
+      ${total ? `<div class="barra-estados" role="img" aria-label="Proporción de sesiones por estado; el detalle está en la tabla">
+        ${estados.filter(([, n]) => n).map(([e, n]) => `<span class="${esc(e)}" style="flex-grow: ${n}" title="${esc(nombre(e))}: ${n}"></span>`).join("")}
+      </div>
+      <div class="tabla-envoltura"><table>
         <thead><tr><th>Estado</th><th class="num">Sesiones</th><th class="num">Parte del total</th></tr></thead>
         <tbody>${estados.map(([e, n]) => `<tr><td>${insignia(e)}</td><td class="num">${n}</td><td class="num">${porcentaje(n / total)}</td></tr>`).join("")}</tbody>
       </table></div>` : vacio("Aún no hay sesiones", 'Reserva la primera desde la <a href="#/agenda">agenda</a>.')}
